@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── studio-folio tokens ────────────────────────────────────────────────
+   Mostly mono, one bold accent. Radius 0. Committed to a single art-directed
+   look — no theme switch, the way a studio index would be printed.        */
+:root {
+  --paper: #f1efea;
+  --ink: #0b0b0b;
+  --muted: #6b6863;
+  --rule: #d5d0c5;
+  --accent: #ff3b14;
+
+  --night: #0b0b0b;
+  --night-muted: #8a867f;
+  --night-rule: #262523;
+
+  --font-heading: "Syne", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-rule;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Anchor targets clear the fixed rail. */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Never let a plate or marquee push the page sideways. `clip` rather than
+       `hidden`: it does not make <body> a scroll container, so scrollWidth stays
+       truthful and a real layout overflow still shows up instead of being
+       silently swallowed. */
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Small caps label — the studio index voice. */
+  .label {
+    @apply font-body text-small uppercase tracking-[0.18em] text-muted;
+  }
+
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
+  }
+
+  .rule-t {
+    border-top: 1px solid var(--rule);
+  }
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────
+   Every animated element ships its final state in CSS and is only pulled
+   back by [data-motion="on"], which useMotionEnabled sets on <html> after
+   confirming the visitor has not asked for reduced motion. Static-first:
+   with JS off, or reduced motion on, the page is already finished.        */
+
+[data-motion="on"] [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 1.25rem));
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-motion="on"] [data-reveal][data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Signature moment: the plate is wiped in behind a moving edge.
+   The clip sits on the wrapper's child, never on [data-wipe] itself — a target
+   clipped to zero width reports an empty intersection rect and would never
+   trigger the observer that is supposed to un-clip it. */
+[data-motion="on"] [data-wipe] > * {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[data-motion="on"] [data-wipe][data-revealed="true"] > * {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Index numerals counter-drift against the scroll — the page's one flourish. */
+[data-motion="on"] [data-drift] {
+  transform: translate3d(0, calc(var(--drift, 0) * var(--drift-range, 3rem)), 0);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Belt and braces — the data-attribute gate should already have caught this. */
+  [data-reveal],
+  [data-wipe] > *,
+  [data-drift] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Marquee — pure CSS so it needs no JS, paused when motion is off. */
+@keyframes marquee-track {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee-track 42s linear infinite;
+}
+
+html:not([data-motion="on"]) .marquee-track {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

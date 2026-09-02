@@ -1,0 +1,25 @@
+Atharva Ashtekar, portfolio
+Copyright (c) 2026 Atharva Ashtekar
+
+Licensed under the MIT License. See LICENSE for the full terms.
+
+WHAT THE LICENCE COVERS
+-----------------------
+The MIT grant covers the source code: the components, hooks, layout primitives,
+motion utilities and build configuration. Take any of it.
+
+It does not grant permission to reuse the personal content as your own. The
+biography, the project write-ups, the capability descriptions and the name and
+likeness of the site's subject are not part of the code grant. If you fork this
+as a starting point, replace the contents of src/lib/ with your own before
+publishing.
+
+FONTS
+-----
+Syne and Inter are loaded from Google Fonts and are licensed under the SIL Open
+Font License 1.1 by their respective authors. They are not redistributed here.
+
+NO STOCK IMAGERY
+----------------
+The project plates are SVG drawn in src/components/ui/Plate.tsx. There is no
+third-party image, icon set or illustration in this repository.
