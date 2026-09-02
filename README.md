@@ -93,10 +93,11 @@ fire" and takes an afternoon to find.
 
 ## Verified
 
+- `bunx tsc --noEmit` clean
+- `bun run build` clean. Both routes prerender as static, 111 kB first load JS
 - 375, 768 and 1440 wide: no horizontal scroll, no console errors
 - `prefers-reduced-motion: reduce`: `data-motion` absent, zero hidden elements,
   marquee animation `none`
-- `bunx tsc --noEmit` clean
 
 ## Licence
 
