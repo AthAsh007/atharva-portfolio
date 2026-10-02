@@ -1,5 +1,0 @@
-# Cloudflare Pages routing for the static Next.js export.
-# The portfolio is a single-page site that uses hash anchors (#index, #contact).
-# Without this, a direct hit on any non-root path 404s; the rule below serves
-# the prerendered index for everything, letting client-side anchor routing work.
-/* /index.html 200

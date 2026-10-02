@@ -143,15 +143,17 @@ never to `[data-wipe]` itself. An element clipped to zero width reports an empty
 intersection rect, so a self-clipping target can never trigger the observer that
 is meant to un-clip it.
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers)
 
 `next.config.ts` sets `output: "export"`, so `bun run build` writes a static site
-to `out/`.
+to `out/`. `wrangler.toml` mounts that directory as Worker static assets, so
+`wrangler deploy` ships it to the edge with no server runtime.
 
 - Build command: `bun install && bun run build`
-- Output directory: `out`
-- `wrangler.toml` pins the project name and output dir for `wrangler pages deploy out`
-- `public/_redirects` serves `index.html` for any path so anchors work
+- Deploy command: `npx wrangler deploy`
+- `[assets] directory = "./out"` with `not_found_handling = "single-page-application"`,
+  so unknown paths fall back to `index.html` while real files (the CV, `llms.txt`,
+  `sitemap.xml`) are served directly
 - The CV sits at `public/Atharva-Ashtekar-CV.pdf` and downloads from the hero
 
 ## Verified

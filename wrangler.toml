@@ -1,11 +1,13 @@
-# Cloudflare Pages — static Next.js export of the portfolio.
-# Build command (set in the Pages dashboard or via `wrangler pages deploy`):
-#   bun install && bun run build
-# Publish directory: out
-# This file lets `wrangler pages deploy` and the Pages GitHub integration pick
-# the right output dir automatically.
+# Cloudflare Workers with static assets. The portfolio has no server runtime:
+# `bun run build` exports the whole site to `out/`, and `wrangler deploy`
+# uploads it as static assets on a Worker that serves them from the edge.
+#
+# Build command (Cloudflare build settings): bun install && bun run build
+# Deploy command: npx wrangler deploy
 name = "atharva-portfolio"
-pages_build_output_dir = "out"
+compatibility_date = "2025-01-01"
 
-[vars]
-ENV = "production"
+[assets]
+directory = "./out"
+# serve index.html for unknown paths so hash anchors keep working
+not_found_handling = "single-page-application"
