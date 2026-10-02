@@ -334,17 +334,6 @@
   animation: pulse-ring 2.6s ease-in-out infinite;
 }
 
-/* a line that sweeps out and back — the hero scroll cue */
-@keyframes scroll-line {
-  0%   { transform: scaleX(0); transform-origin: left; }
-  45%  { transform: scaleX(1); transform-origin: left; }
-  55%  { transform: scaleX(1); transform-origin: right; }
-  100% { transform: scaleX(0); transform-origin: right; }
-}
-.scroll-line {
-  animation: scroll-line 2.4s var(--ease-in-out) infinite;
-}
-
 .marquee-track {
   animation: marquee-track 42s linear infinite;
 }
@@ -360,8 +349,7 @@
 
 html:not([data-motion="on"]) .marquee-track,
 html:not([data-motion="on"]) .marquee-track-reverse,
-html:not([data-motion="on"]) .cta-pulse,
-html:not([data-motion="on"]) .scroll-line {
+html:not([data-motion="on"]) .cta-pulse {
   animation: none;
 }
 @media (prefers-reduced-motion: reduce) {

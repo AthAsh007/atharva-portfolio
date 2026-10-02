@@ -20,9 +20,9 @@ export const projects: Project[] = [
     plate: "ledger",
   },
   {
-    slug: "market5-pro",
+    slug: "kolfly",
     index: "02",
-    title: "Market5 Pro",
+    title: "Kolfly",
     kicker: "Multi-tenant AI SaaS",
     year: "2025",
     role: "Product Engineer",

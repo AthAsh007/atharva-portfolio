@@ -74,6 +74,12 @@ export interface ProcessStep {
   steps: string[];
 }
 
+/** Something being worked on right now, shown in the Now band. */
+export interface CurrentItem {
+  title: string;
+  note: string;
+}
+
 export interface Metric {
   value: string;
   label: string;

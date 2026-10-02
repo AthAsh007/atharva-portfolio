@@ -1,4 +1,4 @@
-import type { NavItem, Profile, ToolkitGroup } from "@/types/portfolio";
+import type { NavItem, Profile, ToolkitGroup, CurrentItem } from "@/types/portfolio";
 
 export const nav: NavItem[] = [
   { label: "Work", href: "#index" },
@@ -47,4 +47,16 @@ export const toolkit: ToolkitGroup[] = [
     items: ["React 19", "Next.js 15", "Tailwind CSS", "FastAPI", "PostgreSQL", "Stripe"],
   },
   { group: "Infra", items: ["Turborepo", "Cloudflare", "gRPC", "Playwright", "Three.js / XR"] },
+];
+
+/** What is being worked on right now, shown in the Now band. */
+export const currently: CurrentItem[] = [
+  {
+    title: "Tenzro",
+    note: "Distributed ledger infrastructure and self-custody wallets on Canton.",
+  },
+  {
+    title: "AI Automations",
+    note: "Agent and workflow pipelines in n8n and TypeScript that remove the manual steps between systems.",
+  },
 ];

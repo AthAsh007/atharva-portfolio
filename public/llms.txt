@@ -8,6 +8,7 @@
 - Roles: AI / ML Engineer, Automation and Agents, Product Engineer, Founder
 - Location: India, working remotely
 - Availability: available for new work
+- Currently building: Tenzro (distributed ledger infrastructure and self-custody wallets on Canton); AI Automations (agent and workflow pipelines in n8n and TypeScript)
 - Email: athatharva2002@gmail.com
 - WhatsApp: +91 95189 70722 (https://wa.me/919518970722)
 - Portfolio: https://athash.in
@@ -20,7 +21,7 @@ AI systems (agents, retrieval, LLM pipelines, evals). Automation (n8n, webhooks,
 ## Selected work
 
 - Tenzro Network (2025 to now): distributed ledger infrastructure and self-custody wallets on the Canton privacy-preserving network. Contract layer in Daml. Stack: Daml, Canton, TypeScript, Node.js.
-- Market5 Pro (2025): multi-tenant AI SaaS for influencer marketing, from discovery to billing, with AI-assisted campaign strategy and usage-based billing. Stack: Next.js, TypeScript, LLM pipelines, PostgreSQL, Stripe.
+- Kolfly (2025): multi-tenant AI SaaS for influencer marketing, from discovery to billing, with AI-assisted campaign strategy and usage-based billing. Stack: Next.js, TypeScript, LLM pipelines, PostgreSQL, Stripe.
 - AI Tutor (2025): an LLM classroom tutor with three avatar modes, built as the usable artifact for a CHI 2025 study. Stack: Python, LLM orchestration, real-time avatars, WebRTC. Paper: https://www.immersification.org/assets/publications/aitutor-chi2025.pdf
 - AI Website Redesign Pipeline (2025): a human-in-the-loop pipeline that scrapes a site, generates redesigns and exports a deployable Next.js project. Runs entirely local. Stack: Next.js 15, Playwright, Claude API, TypeScript.
 - WMTI (2026): a Turborepo monorepo running three services in three languages behind one shared type contract. Stack: Turborepo, React 19, Go / Fiber / gRPC, FastAPI, ChromaDB, Cloudflare.

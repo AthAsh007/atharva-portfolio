@@ -103,11 +103,6 @@ export function Hero() {
                 </div>
               </Reveal>
             </div>
-
-            <div className="mt-s2 flex items-center gap-s2 text-muted">
-              <span className="label">Scroll</span>
-              <span aria-hidden className="scroll-line h-px w-24 origin-left bg-accent/70" />
-            </div>
           </div>
         </div>
       </div>
