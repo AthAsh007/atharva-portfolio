@@ -1,0 +1,13 @@
+# Preferences
+- Wants Awwwards-level (award-winning) website design — premium, high-design, visually sophisticated work. Confidence: 0.9
+- Rejects "AI slop" — explicitly wants authentic, genuine, hand-crafted feeling design rather than AI-generated or cookie-cutter work. Confidence: 0.95
+- Wants attractive designs with cool visual effects and polish — seeks visually interesting, well-polished interfaces. Confidence: 0.85
+- Rejects superficial reskinning (e.g. only changing colors while the layout stays the same, or keeping a component like the wave divider in a new color); wants each section reimagined/rebuilt as a genuinely new design rather than cosmetic tweaks. Confidence: 0.9
+- Likes "liquid glass" / glassmorphism surfaces — translucent frosted panes with blurred backdrop, light-catching borders, specular highlights, and soft sheen — as a signature visual treatment. Confidence: 0.75
+- Hates generic/current templates and wants a better, richer-looking template sourced from the local `website-redesign-services-prod/templates` directory rather than default/template-based builds. Confidence: 0.8
+- Prefers CTA buttons that open a modal (contact/brief dialog) rather than plain mailto links or navigation — explicitly rejects the current "old age" / outdated button look in favor of modern, modal-based interactions. Confidence: 0.8
+- Maintains a copy "sanitization" guide and wants human-facing copy scrubbed of AI tells — no em/en dashes, no curly/smart quotes, no marketing buzzwords (e.g. seamless, robust, elevate, unleash), and no structural AI giveaways. Confidence: 0.75
+- Prefers a starry-night sky as the page background — a starfield with twinkling stars, subtle cursor parallax and the occasional shooting star — over flat or plain gradient backgrounds. Confidence: 0.6
+- Prefers a rich, deep forest green as the base color and explicitly rejects muddy, "dirty" greens. Confidence: 0.6
+- Cares about SEO and GEO (generative engine optimization) for their portfolio: wants structured data (schema.org JSON-LD), a sitemap, robots.txt and an llms.txt fact sheet so search and answer engines can extract facts directly. Confidence: 0.55
+- Wants project work presented as a conventional professional portfolio — a featured case study plus a grid of cover cards with metadata — rather than a minimal or expandable list. Confidence: 0.5

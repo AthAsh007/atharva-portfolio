@@ -1,0 +1,45 @@
+# Atharva Ashtekar
+
+> AI / ML, automation and product engineer based in India, working remotely. Builds AI systems, automation and the products around them: agent and workflow pipelines, distributed ledger infrastructure, multi-tenant AI SaaS, and applied AI research.
+
+## Summary
+
+- Name: Atharva Ashtekar
+- Roles: AI / ML Engineer, Automation and Agents, Product Engineer, Founder
+- Location: India, working remotely
+- Availability: available for new work
+- Email: athatharva2002@gmail.com
+- WhatsApp: +91 95189 70722 (https://wa.me/919518970722)
+- Portfolio: https://athash.in
+- Booking: https://calendly.com/athatharva2002/30min
+
+## Focus
+
+AI systems (agents, retrieval, LLM pipelines, evals). Automation (n8n, webhooks, API integrations, human-in-the-loop). Product engineering (Next.js, TypeScript, backend, PostgreSQL). Distributed ledgers (Daml on Canton). Taking an idea from a paragraph to a running system.
+
+## Selected work
+
+- Tenzro Network (2025 to now): distributed ledger infrastructure and self-custody wallets on the Canton privacy-preserving network. Contract layer in Daml. Stack: Daml, Canton, TypeScript, Node.js.
+- Market5 Pro (2025): multi-tenant AI SaaS for influencer marketing, from discovery to billing, with AI-assisted campaign strategy and usage-based billing. Stack: Next.js, TypeScript, LLM pipelines, PostgreSQL, Stripe.
+- AI Tutor (2025): an LLM classroom tutor with three avatar modes, built as the usable artifact for a CHI 2025 study. Stack: Python, LLM orchestration, real-time avatars, WebRTC. Paper: https://www.immersification.org/assets/publications/aitutor-chi2025.pdf
+- AI Website Redesign Pipeline (2025): a human-in-the-loop pipeline that scrapes a site, generates redesigns and exports a deployable Next.js project. Runs entirely local. Stack: Next.js 15, Playwright, Claude API, TypeScript.
+- WMTI (2026): a Turborepo monorepo running three services in three languages behind one shared type contract. Stack: Turborepo, React 19, Go / Fiber / gRPC, FastAPI, ChromaDB, Cloudflare.
+- Canton Experiments (2025): a library of self-contained Daml contracts, each isolating one distributed-ledger pattern. Stack: Daml, Canton 3.
+
+## Toolkit
+
+Languages: TypeScript, Python, Go, Daml.
+AI and agents: LLM agents, RAG / ChromaDB, Claude API, evals, prompt architecture.
+Automation: n8n, workflow automation, webhooks, API integrations.
+Product: React 19, Next.js 15, Tailwind CSS, FastAPI, PostgreSQL, Stripe.
+Infra: Turborepo, Cloudflare, gRPC, Playwright, Three.js / XR.
+
+## Links
+
+- GitHub: https://github.com/AthAsh007
+- LinkedIn: https://www.linkedin.com/in/atharva-ashtekar-315288240/
+- n8n creator profile: https://n8n.io/creators/athash007/
+- Telegram: https://t.me/DeadAss007
+- WhatsApp: https://wa.me/919518970722
+- Discord: deadass_x
+- CV: https://athash.in/Atharva-Ashtekar-CV.pdf

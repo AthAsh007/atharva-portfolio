@@ -1,21 +1,26 @@
 import { Hero } from "./Hero";
-import { Marquee } from "./Marquee";
+import { Now } from "./Now";
+import { Skills } from "./Skills";
 import { WorkIndex } from "./WorkIndex";
 import { Capabilities } from "./Capabilities";
+import { Process } from "./Process";
 import { Approach } from "./Approach";
 import { Contact } from "./Contact";
 
 /**
- * The "/" entry component. studio-folio section order:
- * hero → gallery → marquee → services → cta → footer (footer lives in AppShell).
+ * The "/" entry component. Section order:
+ * hero - now - toolkit - work - capabilities - process - approach - contact
+ * (the footer lives in AppShell).
  */
 export function HomeMain() {
   return (
     <>
       <Hero />
-      <Marquee />
+      <Now />
+      <Skills />
       <WorkIndex />
       <Capabilities />
+      <Process />
       <Approach />
       <Contact />
     </>

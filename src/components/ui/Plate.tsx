@@ -3,16 +3,15 @@ import type { Project } from "@/types/portfolio";
 import { cn } from "@/lib/utils";
 
 /**
- * Project plate artwork.
- *
- * studio-folio calls for "large project plates" with image-led colour. There is
- * no stock photography here and there shouldn't be — these are drawn instead:
- * one monochrome diagram per project, keyed to what the project actually is,
- * with the accent reserved for a single element in each. Pure SVG, so they cost
- * nothing to load and stay crisp at any plate size.
+ * Project plate artwork. midnight-glass calls for large, glowing plates — the
+ * ink is light, the surface a translucent dark glass panel, and one element
+ * in each plate carries the coral accent. Pure SVG, so they cost nothing to
+ * load and stay crisp at any plate size. Hover glare is applied by the Tilt
+ * wrapper at the plate level (a drop-shadow filter), not here.
  */
 
 const ink = "currentColor";
+const sheet = "var(--surface-2)";
 
 function Ledger() {
   // Chained blocks with a private (accent) sub-tree — Canton's whole point.
@@ -89,7 +88,7 @@ function Stack() {
           y={70 + i * 60}
           width="230"
           height="230"
-          fill="#e7e4dd"
+          fill={i === 2 ? "var(--accent)" : sheet}
           stroke={i === 2 ? "var(--accent)" : ink}
           strokeWidth="2.5"
         />
@@ -113,7 +112,7 @@ function Mesh() {
       <circle cx="270" cy="185" r="30" fill="var(--accent)" />
       {nodes.map(([x, y], i) => (
         <g key={i}>
-          <rect x={x - 42} y={y - 30} width="84" height="60" fill="#e7e4dd" stroke={ink} strokeWidth="2.5" />
+          <rect x={x - 42} y={y - 30} width="84" height="60" fill={sheet} stroke={ink} strokeWidth="2.5" />
           <rect x={x - 26} y={y - 12} width="52" height="6" fill={ink} opacity="0.55" />
           <rect x={x - 26} y={y + 2} width="34" height="6" fill={ink} opacity="0.55" />
         </g>
@@ -152,11 +151,11 @@ const artwork: Record<Project["plate"], ComponentType> = {
 export function Plate({ variant, className }: { variant: Project["plate"]; className?: string }) {
   const Art = artwork[variant];
   return (
-    // The observed element must stay unclipped: an element clipped to zero width
-    // has an empty intersection rect, so a self-clipping target can never
-    // trigger its own reveal. The wipe therefore lives on the inner layer.
-    <div data-wipe="" className={cn("relative w-full overflow-hidden", className)}>
-      <div className="h-full w-full bg-[#e7e4dd] text-ink">
+    // The observed element stays unclipped: a target clipped to zero width
+    // has an empty intersection rect and never triggers its own reveal. The
+    // wipe therefore lives on the inner layer.
+    <div data-wipe className={cn("relative w-full overflow-hidden", className)}>
+      <div className="h-full w-full rounded-[18px] bg-surface/50 text-ink">
         <svg
           viewBox="0 0 560 440"
           role="presentation"

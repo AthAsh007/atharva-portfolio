@@ -1,40 +1,45 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./Reveal";
 
 interface SectionHeaderProps {
-  /** Section number in the studio index, e.g. "02". */
+  /** Section number in the index, e.g. "01". */
   index: string;
   label: string;
   title: string;
   description?: string;
-  tone?: "paper" | "night";
   className?: string;
 }
 
-export function SectionHeader({
-  index,
-  label,
-  title,
-  description,
-  tone = "paper",
-  className,
-}: SectionHeaderProps) {
+/**
+ * The index voice: a hairline rule, a tracked label and a title that reveals
+ * word by word (each word is its own reveal target with a staggered delay) so
+ * headings land with a little cascade instead of a single fade.
+ */
+export function SectionHeader({ index, label, title, description, className }: SectionHeaderProps) {
   return (
-    <div className={cn("grid gap-s3 border-t pt-s3 md:grid-cols-12", tone === "night" ? "border-night-rule" : "border-rule", className)}>
+    <div className={cn("grid gap-s3 border-t border-rule/50 pt-s3 md:grid-cols-12", className)}>
       <Reveal className="md:col-span-4">
-        <p className={cn("label", tone === "night" && "text-night-muted")}>
+        <p className="label">
           <span className="text-accent">{index}</span> &nbsp;/&nbsp; {label}
         </p>
       </Reveal>
       <div className="md:col-span-8">
-        <Reveal delay={80}>
-          <h2 className={cn("font-heading text-h2", tone === "night" && "text-paper")}>{title}</h2>
-        </Reveal>
+        <h2 className="font-heading text-h2">
+          {title.split(" ").map((word, i) => (
+            <span
+              key={`${word}-${i}`}
+              data-reveal=""
+              style={{ "--reveal-delay": `${80 + i * 45}ms` } as CSSProperties}
+              className="mr-[0.26em] inline-block"
+            >
+              {word}
+            </span>
+          ))}
+        </h2>
         {description ? (
           <Reveal delay={160}>
-            <p className={cn("mt-s2 max-w-measure text-body", tone === "night" ? "text-night-muted" : "text-muted")}>
-              {description}
-            </p>
+            <p className="mt-s2 max-w-measure text-body text-muted">{description}</p>
           </Reveal>
         ) : null}
       </div>

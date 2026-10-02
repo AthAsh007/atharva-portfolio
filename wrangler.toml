@@ -1,0 +1,11 @@
+# Cloudflare Pages — static Next.js export of the portfolio.
+# Build command (set in the Pages dashboard or via `wrangler pages deploy`):
+#   bun install && bun run build
+# Publish directory: out
+# This file lets `wrangler pages deploy` and the Pages GitHub integration pick
+# the right output dir automatically.
+name = "atharva-portfolio"
+pages_build_output_dir = "out"
+
+[vars]
+ENV = "production"

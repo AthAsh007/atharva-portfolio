@@ -1,6 +1,7 @@
 # Portfolio
 
 A single-page personal portfolio. Next.js 15 (App Router), TypeScript, Tailwind.
+Exports to static HTML for Cloudflare Pages.
 
 Static-first and motion-optional: every element ships in its final state, so with
 JavaScript disabled or `prefers-reduced-motion: reduce` set, nothing is hidden and
@@ -11,93 +12,153 @@ bun install
 bun run dev
 ```
 
-## Editing the content
+## Design system: Digital Lab x Liquid Glass
 
-Everything on the page comes from three files. No component holds a hardcoded
-list, so the content can move to a CMS without touching a component.
+Five systems, repeated throughout:
 
-| File | What it holds |
-| --- | --- |
-| `src/lib/site.ts` | Name, roles, statement, bio, location, email, socials, the toolkit marquee |
-| `src/lib/projects.ts` | The six index plates: order, copy, stack, links |
-| `src/lib/capabilities.ts` | The capabilities band and the metrics row |
-
-Each project picks its plate artwork with
-`plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave"`. The artwork is
-drawn as SVG in `src/components/ui/Plate.tsx`. Swap in real screenshots there if
-you would rather show the products.
-
-## Design tokens
+1. **Liquid glass** surfaces: a translucent pane with a blurred backdrop, a
+   light-catching border, an inner highlight, a soft shadow and a travelling
+   sheen. Used on panels, cards, the nav, the modal and the hero.
+2. **Background**: a starfield canvas (twinkling stars, parallax, shooting
+   stars) under a dot grid, a grain layer and a cursor glow.
+3. **Type**: Fraunces headings, Inter body, JetBrains Mono for labels and the
+   technical voice, Dancing Script for the name.
+4. **Glow pipelines**: the process section connects its cards with animated
+   pulses; plates tilt and glow on hover.
+5. **Status indicators**: a live clock, an availability pill, a "currently
+   building" dot, and a footer status line.
 
 | Token | Value |
 | --- | --- |
-| Heading font | Syne |
-| Body font | Inter |
-| Border radius | `0`. Nothing is rounded |
-| Colour | Mono paper and ink, one accent (`#ff3b14`) |
-| Cards | None. Full-bleed plates with oversized numerals |
-| Motion budget | Full, spent on one signature moment |
+| Canvas | Deep forest (`#0b2a19`), ivory text (`#f1ecdd`) |
+| Accent | Gold (`#d9ab52`), moss secondary (`#6fae77`) |
+| Heading / body / mono | Fraunces / Inter / JetBrains Mono |
+| Display (name) | Dancing Script |
+| Radius | Liquid glass, up to 28px |
+| Motion | Full, spent on a few signature moments |
 
-The tokens are the source of truth and are transcribed into `tailwind.config.ts`
-and the `:root` block of `src/app/globals.css`. Change them in both.
+Tokens live in `:root` and `[data-theme="light"]` in `src/app/globals.css` and are
+mirrored into `tailwind.config.ts`. Dark is the default; a light ivory-and-gold
+theme is an opt-in toggle that persists in `localStorage`.
+
+## Sections
+
+Hero (liquid-glass masthead) - Now (currently building) - Toolkit (skill
+carousel) - Selected work (featured card + cover grid) - Capabilities (bento) -
+Process (pipeline) - Approach (principles + numbers) - Contact (split panel) -
+Footer.
+
+## Editable content
+
+Everything comes from files under `src/lib/`. No component holds a hardcoded
+list.
+
+| File | What it holds |
+| --- | --- |
+| `site.ts` | Name, roles, statement, bio, location, email, booking link, socials, the grouped toolkit |
+| `projects.ts` | The six projects: order, copy, stack, links, plate art |
+| `capabilities.ts` | The capabilities bento, the principles, the metrics |
+| `process.ts` | The four process stages |
+
+Each project picks its plate art with
+`plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave"`. The art is drawn
+as SVG in `src/components/ui/Plate.tsx`.
 
 ## Architecture
-
-Two tiers, and no more:
 
 ```
 src/
 ├── app/
 │   ├── layout.tsx            <html>, fonts, metadata
-│   ├── globals.css           design tokens and motion rules
-│   ├── page.tsx              "/" stays thin: chrome and metadata, renders one Main
-│   └── components/           LOCAL to "/", relative imports
+│   ├── globals.css           tokens, liquid glass, motion rules
+│   ├── page.tsx              thin: renders one Main
+│   └── components/           LOCAL to "/"
 │       ├── HomeMain.tsx      the page entry component
-│       ├── Hero.tsx
-│       ├── Marquee.tsx
-│       ├── WorkIndex.tsx
-│       ├── Capabilities.tsx
-│       ├── Approach.tsx
-│       └── Contact.tsx
-├── components/               GLOBAL, imported through the @/ alias
-│   ├── ui/                   Button, Plate, Reveal, SectionHeader
-│   └── layout/               AppShell, Navbar, Footer
-├── hooks/                    useMotionEnabled, useReveal, useScrollDrift
-├── lib/                      site.ts, projects.ts, capabilities.ts, utils.ts
+│       ├── Hero.tsx          liquid-glass masthead
+│       ├── Now.tsx           currently-building status band
+│       ├── Skills.tsx        skill-group carousel + tech ticker
+│       ├── WorkIndex.tsx     featured case study + cover grid
+│       ├── Capabilities.tsx  bento grid
+│       ├── Process.tsx       four stages + animated pipeline
+│       ├── Approach.tsx      principles + metrics strip
+│       └── Contact.tsx       split contact panel
+├── components/
+│   ├── ui/                   Button, Plate, Reveal, Tilt, SectionHeader,
+│   │                         ContactModal, CopyEmail, LocalClock
+│   └── layout/               AppShell, Navbar, Footer, Cursor, CursorGlow,
+│                             Starfield, FloatingCTA, CommandPalette, EasterEgg
+├── hooks/                    useMotionEnabled, useReveal, useScrollDrift,
+│                             useScrollVelocity, useTheme
+├── lib/                      site.ts, projects.ts, capabilities.ts, process.ts,
+│                             mouseStore.ts, utils.ts
 └── types/                    portfolio.ts
 ```
 
-**Adding a page.** Create `src/app/<route>/page.tsx` plus
-`src/app/<route>/components/<Name>Main.tsx`, and keep `page.tsx` thin. Promote a
-local component into `src/components/` only once a second page imports it.
-Promoting early is how a two-page site ends up with a component library nobody
-asked for.
+## Interactions
+
+- **Command palette**: Cmd/Ctrl+K or "/" (or the nav button) opens a palette that
+  jumps to sections, opens the brief, downloads the CV, copies the email,
+  switches theme and opens profiles. Arrow keys and Enter navigate it.
+- **Custom cursor**: a blend-mode dot with a trailing ring that snaps toward
+  interactive elements, on pointer-fine devices.
+- **Magnetic buttons**: buttons lean toward the cursor.
+- **Copy email**: copies to the clipboard with a small pop.
+- **Live clock**: updates every second in IST.
+- **Easter egg**: try the Konami code, or open the console.
+
+All of the above are disabled under `prefers-reduced-motion`.
+
+## SEO and GEO
+
+`src/lib/seo.ts` is the single source of truth for the canonical URL, the title
+and description, and the structured data, so nothing drifts.
+
+- **Metadata**: canonical link, enriched OpenGraph and Twitter cards, keywords,
+  authors, publisher, category, and a `googleBot` directive that allows large
+  image previews and unbounded snippets.
+- **Structured data**: a schema.org JSON-LD graph rendered in `<head>`: a
+  `Person` (with `knowsAbout`, `sameAs`, address), a `WebSite`, a `ProfilePage`,
+  and an `ItemList` of the selected work as `CreativeWork` items.
+- **Crawling**: `app/sitemap.ts` emits `sitemap.xml`; `app/robots.ts` emits
+  `robots.txt` and allows every crawler, AI answer engines included.
+- **Answer engines**: `public/llms.txt` is a plain-language fact sheet (roles,
+  focus, projects, toolkit, links) written for LLM consumption.
+- **Entity verification**: profile links carry `rel="me"`.
 
 ## Motion
 
-Motion is pulled back only under `[data-motion="on"]`, which `useMotionEnabled`
-sets on `<html>` after confirming the visitor has not asked for reduced motion.
-The default state of every element is its final state.
+Motion runs only under `[data-motion="on"]`, which `useMotionEnabled` sets on
+`<html>` after confirming the visitor has not asked for reduced motion. The
+default state of every element is its final state.
 
 - `useReveal` runs one document-wide IntersectionObserver that flips
-  `data-revealed`. One observer, not one per element.
-- `useScrollDrift` sets a rAF-throttled `--drift` variable. This drives the
-  signature moment: the index numerals counter-move against the scroll.
-- The marquee is CSS-only and stops dead when motion is off.
+  `data-revealed`; section titles reveal word by word.
+- `mouseStore` holds a single `mousemove` listener and one rAF loop, driving the
+  cursor, cursor glow, hero and background parallax, and every 3D plate tilt.
+- `useScrollVelocity` writes `--sv`, which skews the tech ticker with the scroll.
+- `Starfield` is a canvas of stars plus occasional shooting stars.
 
 **A note for future edits.** The clip-path wipe is applied to `[data-wipe] > *`,
 never to `[data-wipe]` itself. An element clipped to zero width reports an empty
 intersection rect, so a self-clipping target can never trigger the observer that
-is meant to un-clip it. That bug looks like "the animation randomly does not
-fire" and takes an afternoon to find.
+is meant to un-clip it.
+
+## Deploy (Cloudflare Pages)
+
+`next.config.ts` sets `output: "export"`, so `bun run build` writes a static site
+to `out/`.
+
+- Build command: `bun install && bun run build`
+- Output directory: `out`
+- `wrangler.toml` pins the project name and output dir for `wrangler pages deploy out`
+- `public/_redirects` serves `index.html` for any path so anchors work
+- The CV sits at `public/Atharva-Ashtekar-CV.pdf` and downloads from the hero
 
 ## Verified
 
 - `bunx tsc --noEmit` clean
-- `bun run build` clean. Both routes prerender as static, 111 kB first load JS
-- 375, 768 and 1440 wide: no horizontal scroll, no console errors
-- `prefers-reduced-motion: reduce`: `data-motion` absent, zero hidden elements,
-  marquee animation `none`
+- `bun run build` clean, static export
+- `prefers-reduced-motion: reduce`: `data-motion` absent, zero hidden elements
 
 ## Licence
 

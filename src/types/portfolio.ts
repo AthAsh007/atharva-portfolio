@@ -22,6 +22,8 @@ export interface Profile {
   location: string;
   email: string;
   availability: string;
+  /** Calendly-style booking link for a 30-min call. */
+  booking: string;
   socials: SocialLink[];
 }
 
@@ -50,6 +52,26 @@ export interface Capability {
   title: string;
   body: string;
   tags: string[];
+}
+
+/** A short position statement used by the Approach band. */
+export interface Principle {
+  index: string;
+  title: string;
+  body: string;
+}
+
+/** A group of skills shown as one card in the toolkit carousel. */
+export interface ToolkitGroup {
+  group: string;
+  items: string[];
+}
+
+/** One stage of the process pipeline. */
+export interface ProcessStep {
+  index: string;
+  title: string;
+  steps: string[];
 }
 
 export interface Metric {
