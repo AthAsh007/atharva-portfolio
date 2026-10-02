@@ -41,11 +41,10 @@ export const projects: Project[] = [
     year: "2025",
     role: "Engineer",
     summary:
-      "An LLM classroom tutor with three avatar modes, built as the usable artifact for a CHI 2025 study.",
+      "An LLM classroom tutor with three avatar modes, built as the usable artifact for a research study.",
     detail:
       "A locally deployable, open-source tutoring platform implementing three interaction modes (plain text, a real-time deepfake avatar of the lecturer, and a neutral 3D mascot) so the research could isolate what avatar representation actually does to a learning experience. Built to be run by a department, not a lab machine.",
     stack: ["Python", "LLM orchestration", "Real-time avatars", "WebRTC"],
-    href: "https://www.immersification.org/assets/publications/aitutor-chi2025.pdf",
     plate: "orbit",
   },
   {

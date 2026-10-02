@@ -16,8 +16,9 @@ export const capabilities: Capability[] = [
   {
     index: "C",
     title: "Automation",
-    body: "Agent and workflow automation, mostly in n8n and TypeScript: webhooks, scheduled jobs, API integrations and approvals. It removes the manual middle of a process.",
+    body: "Agent and workflow automation, mostly in n8n and TypeScript: webhooks, scheduled jobs, API integrations and approvals. I am an n8n verified creator, so the workflows run on a platform I know end to end.",
     tags: ["n8n", "Agents", "Webhooks", "API integrations", "Human in the loop"],
+    badge: "n8n verified creator",
   },
   {
     index: "D",
@@ -55,6 +56,6 @@ export const principles: Principle[] = [
 export const metrics: Metric[] = [
   { value: "Zero to one", label: "Products carried from an idea to production" },
   { value: "Polyglot", label: "Languages running in production" },
-  { value: "Published", label: "Research artifact behind a CHI paper" },
+  { value: "Published", label: "Research artifact behind a published study" },
   { value: "Solo", label: "Full-stack ownership" },
 ];

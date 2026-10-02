@@ -6,6 +6,7 @@
 
 - Name: Atharva Ashtekar
 - Roles: AI / ML Engineer, Automation and Agents, Product Engineer, Founder
+- n8n: verified creator (multiple published workflows)
 - Location: India, working remotely
 - Availability: available for new work
 - Currently building: Tenzro (distributed ledger infrastructure and self-custody wallets on Canton); AI Automations (agent and workflow pipelines in n8n and TypeScript)
@@ -22,7 +23,7 @@ AI systems (agents, retrieval, LLM pipelines, evals). Automation (n8n, webhooks,
 
 - Tenzro Network (2025 to now): distributed ledger infrastructure and self-custody wallets on the Canton privacy-preserving network. Contract layer in Daml. Stack: Daml, Canton, TypeScript, Node.js.
 - Kolfly (2025): multi-tenant AI SaaS for influencer marketing, from discovery to billing, with AI-assisted campaign strategy and usage-based billing. Stack: Next.js, TypeScript, LLM pipelines, PostgreSQL, Stripe.
-- AI Tutor (2025): an LLM classroom tutor with three avatar modes, built as the usable artifact for a CHI 2025 study. Stack: Python, LLM orchestration, real-time avatars, WebRTC. Paper: https://www.immersification.org/assets/publications/aitutor-chi2025.pdf
+- AI Tutor (2025): an LLM classroom tutor with three avatar modes, built as the usable artifact for a research study. Stack: Python, LLM orchestration, real-time avatars, WebRTC.
 - AI Website Redesign Pipeline (2025): a human-in-the-loop pipeline that scrapes a site, generates redesigns and exports a deployable Next.js project. Runs entirely local. Stack: Next.js 15, Playwright, Claude API, TypeScript.
 - WMTI (2026): a Turborepo monorepo running three services in three languages behind one shared type contract. Stack: Turborepo, React 19, Go / Fiber / gRPC, FastAPI, ChromaDB, Cloudflare.
 - Canton Experiments (2025): a library of self-contained Daml contracts, each isolating one distributed-ledger pattern. Stack: Daml, Canton 3.

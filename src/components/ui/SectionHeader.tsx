@@ -8,6 +8,8 @@ interface SectionHeaderProps {
   label: string;
   title: string;
   description?: string;
+  /** Optional external link shown under the description, e.g. a profile. */
+  action?: { label: string; href: string };
   className?: string;
 }
 
@@ -16,7 +18,14 @@ interface SectionHeaderProps {
  * word by word (each word is its own reveal target with a staggered delay) so
  * headings land with a little cascade instead of a single fade.
  */
-export function SectionHeader({ index, label, title, description, className }: SectionHeaderProps) {
+export function SectionHeader({
+  index,
+  label,
+  title,
+  description,
+  action,
+  className,
+}: SectionHeaderProps) {
   return (
     <div className={cn("grid gap-s3 border-t border-rule/50 pt-s3 md:grid-cols-12", className)}>
       <Reveal className="md:col-span-4">
@@ -40,6 +49,18 @@ export function SectionHeader({ index, label, title, description, className }: S
         {description ? (
           <Reveal delay={160}>
             <p className="mt-s2 max-w-measure text-body text-muted">{description}</p>
+          </Reveal>
+        ) : null}
+        {action ? (
+          <Reveal delay={220}>
+            <a
+              href={action.href}
+              target="_blank"
+              rel="me noreferrer"
+              className="link-underline mt-s2 inline-flex items-center gap-2"
+            >
+              {action.label}
+            </a>
           </Reveal>
         ) : null}
       </div>

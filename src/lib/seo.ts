@@ -47,6 +47,7 @@ export const jsonLd = {
       telephone: "+919518970722",
       knowsLanguage: ["en", "hi", "mr"],
       knowsAbout,
+      award: ["n8n Verified Creator"],
       address: {
         "@type": "PostalAddress",
         addressCountry: "IN",

@@ -15,7 +15,7 @@ export const profile: Profile = {
     "I build AI systems, automation and the products around them: agent and workflow pipelines, the ledger underneath, and the interface people use.",
   bio: [
     "I build the whole product, not one layer of it. Most of what I ship starts as a rough idea and ends as a running system: the retrieval and agent layer, the API and data model under it, deployment, and the front end people use.",
-    "Automation runs through most of it. Agent and workflow pipelines in n8n and TypeScript that wire systems together, keep a human on the steps that matter, and remove the manual middle of a process.",
+    "Automation runs through most of it. I am an n8n verified creator, and I build agent and workflow pipelines in n8n and TypeScript that wire systems together, keep a human on the steps that matter, and remove the manual middle of a process.",
     "That range is deliberate. AI products fail in the seams: between the model and the data, between the prototype and the version that survives real users. Owning both ends keeps those seams from becoming someone else's problem.",
     "I work as a software engineer at Manexus and ship my own products under Tenzro. That work covers distributed ledgers, multi-tenant SaaS, automation, and applied AI research tooling.",
   ],

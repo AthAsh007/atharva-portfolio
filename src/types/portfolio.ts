@@ -52,6 +52,8 @@ export interface Capability {
   title: string;
   body: string;
   tags: string[];
+  /** Optional credential badge shown on the tile, e.g. "n8n verified creator". */
+  badge?: string;
 }
 
 /** A short position statement used by the Approach band. */

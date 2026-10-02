@@ -1,4 +1,5 @@
 import { projects } from "@/lib/projects";
+import { profile } from "@/lib/site";
 import { Plate } from "@/components/ui/Plate";
 import { Tilt } from "@/components/ui/Tilt";
 import { Reveal } from "@/components/ui/Reveal";
@@ -12,6 +13,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
  */
 export function WorkIndex() {
   const [featured, ...rest] = projects;
+  const n8n = profile.socials.find((s) => s.label.toLowerCase() === "n8n");
 
   return (
     <section id="index" className="shell scroll-mt-24 py-s5">
@@ -20,6 +22,7 @@ export function WorkIndex() {
         label="Selected work"
         title="Some things I built and shipped."
         description="Ledger infrastructure, multi-tenant AI SaaS, applied research tooling and agentic pipelines. Each one started as an empty repository and runs today."
+        action={n8n ? { label: "Workflows published on n8n", href: n8n.href } : undefined}
       />
 
       {featured ? (

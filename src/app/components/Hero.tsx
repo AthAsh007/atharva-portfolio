@@ -45,9 +45,13 @@ export function Hero() {
               </p>
             </Reveal>
             <Reveal delay={80}>
-              <div className="flex items-center gap-s2">
+              <div className="flex flex-wrap items-center gap-s2">
                 <p className="hidden items-center gap-2 text-small text-muted sm:inline-flex">
                   <LocalClock />
+                </p>
+                <p className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-small text-accent">
+                  <span aria-hidden>&#10003;</span>
+                  n8n verified creator
                 </p>
                 <p className="inline-flex items-center gap-2 rounded-full border border-rule/50 px-3 py-1 text-small text-muted">
                   <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />

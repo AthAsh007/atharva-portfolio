@@ -42,6 +42,14 @@ export function Capabilities() {
             </div>
 
             <h3 className="font-heading text-h2 tracking-tight">{capability.title}</h3>
+
+            {capability.badge ? (
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-small text-accent">
+                <span aria-hidden>&#10003;</span>
+                {capability.badge}
+              </span>
+            ) : null}
+
             <p className="max-w-measure text-body text-muted">{capability.body}</p>
 
             <ul className="mt-auto flex flex-wrap gap-x-s2 gap-y-1 pt-s2">

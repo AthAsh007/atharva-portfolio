@@ -12,3 +12,4 @@
 - Cares about SEO and GEO (generative engine optimization) for their portfolio: wants structured data (schema.org JSON-LD), a sitemap, robots.txt and an llms.txt fact sheet so search and answer engines can extract facts directly. Confidence: 0.55
 - Wants project work presented as a conventional professional portfolio — a featured case study plus a grid of cover cards with metadata — rather than a minimal or expandable list. Confidence: 0.5
 - Rejects leftover decorative UI affordances that don't fit the current design language (e.g. a "Scroll" cue/label with an animated line in the hero) and expects them removed cleanly, including any now-dead CSS/keyframes/classes. Confidence: 0.55
+- Keeps academic publication references (e.g. the CHI 2025 paper link) off the public portfolio site — wants research described generically (e.g. "a research study") with no paper link, venue name, or citation shown to visitors. Confidence: 0.7
