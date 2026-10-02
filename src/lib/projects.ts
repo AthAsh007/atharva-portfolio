@@ -1,7 +1,11 @@
 import type { Project } from "@/types/portfolio";
+import { profile } from "@/lib/site";
+
+/** The n8n creator profile, reused by the Automations card. */
+const n8n = profile.socials.find((s) => s.label.toLowerCase() === "n8n");
 
 /**
- * The index. Six plates, oversized numbers — the spine of the page.
+ * The index. Eight plates, oversized numbers, the spine of the page.
  * Ordered by weight, not by date.
  */
 export const projects: Project[] = [
@@ -20,8 +24,38 @@ export const projects: Project[] = [
     plate: "ledger",
   },
   {
-    slug: "kolfly",
+    slug: "automations",
     index: "02",
+    title: "Automations",
+    kicker: "Workflow automation suite",
+    year: "2025 to now",
+    role: "Automation Engineer",
+    summary:
+      "Agent and workflow pipelines in n8n and TypeScript that remove the manual steps between systems.",
+    detail:
+      "Agent and workflow pipelines wired across real business systems. A LinkedIn engine turns post comments into classified, personalised outreach, and an auto publishing pipeline researches a topic, drafts long form copy with an LLM and schedules it to client sites. Every workflow ships with retries, fallbacks and idempotency keys, holding roughly 98% completion across 3,000+ monthly executions with no double sends.",
+    stack: ["n8n", "TypeScript", "LLM APIs", "PostgreSQL", "Webhooks"],
+    href: n8n?.href,
+    linkLabel: "n8n profile",
+    plate: "flow",
+  },
+  {
+    slug: "kolektiva",
+    index: "03",
+    title: "Kolektiva",
+    kicker: "RWA fractional property platform",
+    year: "2024 to 2025",
+    role: "Engineer",
+    summary:
+      "A real-world asset platform that tokenises property for fractional on-chain ownership.",
+    detail:
+      "ERC standard tokenisation contracts that split a property into fractional, tradeable ownership. Investor onboarding, KYC gating and the full offering lifecycle run end to end, covering primary issuance and secondary transfers with on-chain ownership tracking and secure transaction flows. Eight properties onboarded.",
+    stack: ["Solidity", "Ethereum", "Web3.js", "Next.js", "Node.js"],
+    plate: "fraction",
+  },
+  {
+    slug: "kolfly",
+    index: "04",
     title: "Kolfly",
     kicker: "Multi-tenant AI SaaS",
     year: "2025",
@@ -35,7 +69,7 @@ export const projects: Project[] = [
   },
   {
     slug: "ai-tutor",
-    index: "03",
+    index: "05",
     title: "AI Tutor",
     kicker: "Applied AI research artifact",
     year: "2025",
@@ -49,7 +83,7 @@ export const projects: Project[] = [
   },
   {
     slug: "redesign-pipeline",
-    index: "04",
+    index: "06",
     title: "AI Website Redesign Pipeline",
     kicker: "Agentic tooling",
     year: "2025",
@@ -63,7 +97,7 @@ export const projects: Project[] = [
   },
   {
     slug: "wmti",
-    index: "05",
+    index: "07",
     title: "WMTI",
     kicker: "Polyglot platform",
     year: "2026",
@@ -77,7 +111,7 @@ export const projects: Project[] = [
   },
   {
     slug: "canton-experiments",
-    index: "06",
+    index: "08",
     title: "Canton Experiments",
     kicker: "Open pattern library",
     year: "2025",

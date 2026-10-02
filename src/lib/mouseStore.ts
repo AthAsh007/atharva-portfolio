@@ -12,7 +12,7 @@ import { useEffect } from "react";
  *    rotate/scale. Registering is lazy: the loop only runs while at least one
  *    tilter is mounted.
  *
- * Why centralize: six plates each spinning their own rAF is fine; but sharing
+ * Why centralize: eight plates each spinning their own rAF is fine; but sharing
  * one loop (and one listener) keeps the budget obvious and avoids rect thrash.
  */
 

@@ -43,8 +43,10 @@ export interface Project {
   detail: string;
   stack: string[];
   href?: string;
+  /** Text for the outbound link on a cover card. Defaults to "Paper". */
+  linkLabel?: string;
   /** Drives the generated plate artwork — no stock imagery. */
-  plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave";
+  plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave" | "flow" | "fraction";
 }
 
 export interface Capability {

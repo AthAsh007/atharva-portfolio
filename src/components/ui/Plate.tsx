@@ -139,6 +139,79 @@ function Wave() {
   );
 }
 
+function Flow() {
+  // An automation canvas: one trigger fanning out to two branches, one live.
+  const nodes = [
+    { x: 50, y: 185, w: 150, accent: false },
+    { x: 255, y: 75, w: 155, accent: true },
+    { x: 255, y: 300, w: 155, accent: false },
+  ];
+  return (
+    <>
+      <path
+        d="M200 225 C232 225 228 115 255 115 M200 225 C232 225 228 340 255 340"
+        fill="none"
+        stroke={ink}
+        strokeWidth="2.5"
+        strokeOpacity="0.6"
+      />
+      {nodes.map((n, i) => (
+        <g key={i}>
+          <rect
+            x={n.x}
+            y={n.y}
+            width={n.w}
+            height="80"
+            rx="14"
+            fill={n.accent ? "var(--accent)" : sheet}
+            stroke={n.accent ? "var(--accent)" : ink}
+            strokeWidth="2.5"
+          />
+          <rect x={n.x + 20} y={n.y + 22} width={n.w - 70} height="8" fill={n.accent ? sheet : ink} opacity={n.accent ? 0.9 : 0.5} />
+          <rect x={n.x + 20} y={n.y + 44} width={n.w - 95} height="8" fill={n.accent ? sheet : ink} opacity={n.accent ? 0.9 : 0.3} />
+        </g>
+      ))}
+      <circle cx="200" cy="225" r="8" fill="var(--accent)" />
+      <circle cx="255" cy="115" r="7" fill={ink} opacity="0.5" />
+      <circle cx="255" cy="340" r="7" fill={ink} opacity="0.5" />
+    </>
+  );
+}
+
+function Fraction() {
+  // A property split into fractional shares, beside the tokens that claim them.
+  const rows = 5;
+  const tokens: [number, number, boolean][] = [
+    [400, 130, false],
+    [455, 230, true],
+    [395, 330, false],
+  ];
+  return (
+    <>
+      <rect x="110" y="60" width="190" height="320" fill="none" stroke={ink} strokeWidth="3" />
+      {Array.from({ length: rows }).map((_, i) => (
+        <rect
+          key={i}
+          x="110"
+          y={60 + i * 64}
+          width="190"
+          height="64"
+          fill={i === 2 ? "var(--accent)" : sheet}
+          stroke={ink}
+          strokeWidth="2"
+        />
+      ))}
+      {tokens.map(([x, y, accent], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r="30" fill={accent ? "var(--accent)" : sheet} stroke={accent ? "var(--accent)" : ink} strokeWidth="2.5" />
+          <path d={`M${x - 30} ${y} h60`} stroke={accent ? sheet : ink} strokeWidth="2" strokeOpacity={accent ? 0.9 : 0.5} />
+        </g>
+      ))}
+      <path d="M300 220 H368" stroke={ink} strokeWidth="2.5" strokeDasharray="6 6" strokeOpacity="0.7" />
+    </>
+  );
+}
+
 const artwork: Record<Project["plate"], ComponentType> = {
   ledger: Ledger,
   grid: Grid,
@@ -146,6 +219,8 @@ const artwork: Record<Project["plate"], ComponentType> = {
   stack: Stack,
   mesh: Mesh,
   wave: Wave,
+  flow: Flow,
+  fraction: Fraction,
 };
 
 export function Plate({ variant, className }: { variant: Project["plate"]; className?: string }) {

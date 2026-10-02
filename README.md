@@ -56,12 +56,12 @@ list.
 | File | What it holds |
 | --- | --- |
 | `site.ts` | Name, roles, statement, bio, location, email, booking link, socials, the grouped toolkit |
-| `projects.ts` | The six projects: order, copy, stack, links, plate art |
+| `projects.ts` | The eight projects: order, copy, stack, links, plate art |
 | `capabilities.ts` | The capabilities bento, the principles, the metrics |
 | `process.ts` | The four process stages |
 
 Each project picks its plate art with
-`plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave"`. The art is drawn
+`plate: "ledger" | "grid" | "orbit" | "stack" | "mesh" | "wave" | "flow" | "fraction"`. The art is drawn
 as SVG in `src/components/ui/Plate.tsx`.
 
 ## Architecture

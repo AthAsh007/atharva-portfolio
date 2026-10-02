@@ -107,7 +107,7 @@ export function WorkIndex() {
                     rel="noreferrer"
                     className="text-small uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-70"
                   >
-                    Paper &nbsp;&rarr;
+                    {project.linkLabel ?? "Paper"} &nbsp;&rarr;
                   </a>
                 ) : null}
               </div>

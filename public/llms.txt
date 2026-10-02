@@ -22,6 +22,8 @@ AI systems (agents, retrieval, LLM pipelines, evals). Automation (n8n, webhooks,
 ## Selected work
 
 - Tenzro Network (2025 to now): distributed ledger infrastructure and self-custody wallets on the Canton privacy-preserving network. Contract layer in Daml. Stack: Daml, Canton, TypeScript, Node.js.
+- Automations (2025 to now): agent and workflow pipelines in n8n and TypeScript that remove the manual steps between systems, including a LinkedIn outreach engine and an auto-publishing pipeline. Stack: n8n, TypeScript, LLM APIs, PostgreSQL, webhooks.
+- Kolektiva (2024 to 2025): an RWA platform tokenising real estate for fractional on-chain ownership, with ERC-standard tokenisation contracts, investor onboarding and KYC gating. Eight properties onboarded. Stack: Solidity, Ethereum, Web3.js, Next.js, Node.js.
 - Kolfly (2025): multi-tenant AI SaaS for influencer marketing, from discovery to billing, with AI-assisted campaign strategy and usage-based billing. Stack: Next.js, TypeScript, LLM pipelines, PostgreSQL, Stripe.
 - AI Tutor (2025): an LLM classroom tutor with three avatar modes, built as the usable artifact for a research study. Stack: Python, LLM orchestration, real-time avatars, WebRTC.
 - AI Website Redesign Pipeline (2025): a human-in-the-loop pipeline that scrapes a site, generates redesigns and exports a deployable Next.js project. Runs entirely local. Stack: Next.js 15, Playwright, Claude API, TypeScript.
