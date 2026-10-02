@@ -1,4 +1,5 @@
-# Preferences
+- Prefers a rich, deep forest green as the base color and explicitly rejects muddy, "dirty" greens (hex: `#0b2a19`, `#103722`). Confidence: 0.7
+- Pairs the forest-green base with gold accents (e.g. `#d9ab52`), forming a "forest-gold" color theme throughout the site. Confidence: 0.6# Preferences
 - Wants Awwwards-level (award-winning) website design — premium, high-design, visually sophisticated work. Confidence: 0.9
 - Rejects "AI slop" — explicitly wants authentic, genuine, hand-crafted feeling design rather than AI-generated or cookie-cutter work. Confidence: 0.95
 - Wants attractive designs with cool visual effects and polish — seeks visually interesting, well-polished interfaces. Confidence: 0.85
