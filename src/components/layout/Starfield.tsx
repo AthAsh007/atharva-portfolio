@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { mouseStore } from "@/lib/mouseStore";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
  * The background: a fixed starry night over the forest.
@@ -10,14 +11,28 @@ import { mouseStore } from "@/lib/mouseStore";
  *  - a canvas of stars that twinkle, drift a little with the cursor, and
  *    occasionally throw a shooting star
  *
- * Static-first: with motion off (or reduced motion) the stars are drawn once
- * and hold still. Hidden entirely in the light theme. Pointer-events none.
+ * Static-first: with reduced motion the stars are drawn once and hold still.
+ * Hidden entirely in the light theme, where the loop also pauses. Pointer-events
+ * none. With motion on, the canvas fades up after its first draw (night falls)
+ * rather than popping in after hydration.
+ *
+ * Budget: the twinkle is capped at ~40fps on desktop and ~30fps on phones and
+ * tablets (it reads the same as 144fps, for a fraction of the work). Stars are
+ * blitted from a few pre-rendered soft-dot sprites instead of one arc path
+ * each. On coarse pointers DPR is capped at 1.5, the star count drops and there
+ * is no cursor parallax. The two nebula glows are painted once per size into
+ * an offscreen canvas and blitted. Star positions are stored normalised and
+ * kept across effect runs (the hydration pass, a reduced-motion flip), so the
+ * sky is seeded once: the URL bar or a re-run only rescales it, and only a
+ * real width change reshuffles it.
  */
 
 interface Star {
+  /** 0..1 of the canvas width / height */
   x: number;
   y: number;
-  r: number;
+  /** index into SPRITE_RADII */
+  size: number;
   base: number;
   amp: number;
   speed: number;
@@ -34,8 +49,18 @@ interface Shooter {
   max: number;
 }
 
+/** Star radii in CSS px; each star snaps to the nearest one. */
+const SPRITE_RADII = [0.4, 0.7, 1.0, 1.35];
+
+interface Sky {
+  stars: Star[];
+  builtW: number;
+}
+
 export function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sky = useRef<Sky>({ stars: [], builtW: 0 });
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,67 +68,127 @@ export function Starfield() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // gate on the media query directly: child effects run before the parent's
-    // useMotionEnabled, so data-motion is not yet set here.
+    const root = document.documentElement;
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
     const animate = !reduced;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
+    const frameGap = coarse ? 33 : 25; // ~30fps on touch, ~40fps on desktop
 
     let w = 0;
     let h = 0;
-    let stars: Star[] = [];
     let shooters: Shooter[] = [];
+    let nebulaLayer: HTMLCanvasElement | null = null;
     let raf = 0;
     let lastSpawn = 0;
+    let lastFrame = 0;
 
+    const isLight = () => root.dataset.theme === "light";
+
+    // one soft dot per size, drawn at device resolution and blitted 1:1
+    const sprites = SPRITE_RADII.map((r) => {
+      const size = Math.ceil((r * 2 + 2) * dpr);
+      const c = document.createElement("canvas");
+      c.width = size;
+      c.height = size;
+      const o = c.getContext("2d");
+      if (o) {
+        o.fillStyle = "#f6f1e2";
+        o.beginPath();
+        o.arc(size / 2, size / 2, r * dpr, 0, Math.PI * 2);
+        o.fill();
+      }
+      return { canvas: c, css: size / dpr };
+    });
+
+    const buildStars = () => {
+      const count = Math.max(
+        coarse ? 60 : 90,
+        Math.min(300, Math.round((w * h) / (coarse ? 12000 : 8000))),
+      );
+      sky.current = {
+        builtW: w,
+        stars: Array.from({ length: count }, () => {
+          const r = Math.random() * 1.3 + 0.25;
+          let size = 0;
+          for (let i = 1; i < SPRITE_RADII.length; i++) {
+            if (Math.abs(SPRITE_RADII[i] - r) < Math.abs(SPRITE_RADII[size] - r)) size = i;
+          }
+          return {
+            x: Math.random(),
+            y: Math.random(),
+            size,
+            base: Math.random() * 0.5 + 0.28,
+            amp: Math.random() * 0.4,
+            speed: Math.random() * 1.6 + 0.3,
+            phase: Math.random() * Math.PI * 2,
+            depth: Math.random() * 0.8 + 0.2,
+          };
+        }),
+      };
+    };
+
+    const buildNebula = () => {
+      const off = document.createElement("canvas");
+      off.width = canvas.width;
+      off.height = canvas.height;
+      const o = off.getContext("2d");
+      if (!o) {
+        nebulaLayer = null;
+        return;
+      }
+      o.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const glow = (xr: number, yr: number, rad: number, hue: string) => {
+        const g = o.createRadialGradient(w * xr, h * yr, 0, w * xr, h * yr, rad);
+        g.addColorStop(0, hue);
+        g.addColorStop(1, "transparent");
+        o.fillStyle = g;
+        o.fillRect(0, 0, w, h);
+      };
+      // soft forest glows behind the stars
+      glow(0.2, 0.15, Math.max(w, h) * 0.5, "rgba(111, 174, 119, 0.10)");
+      glow(0.85, 0.75, Math.max(w, h) * 0.55, "rgba(217, 171, 82, 0.07)");
+      nebulaLayer = off;
+    };
+
+    /** Returns false when the layer is hidden (light theme, display:none). */
     const resize = () => {
-      w = canvas.clientWidth;
-      h = canvas.clientHeight;
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      if (cw === 0 || ch === 0) return false;
+      if (cw === w && ch === h && nebulaLayer) return true;
+      w = cw;
+      h = ch;
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      const count = Math.max(90, Math.min(300, Math.round((w * h) / 8000)));
-      stars = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 1.3 + 0.25,
-        base: Math.random() * 0.5 + 0.28,
-        amp: Math.random() * 0.4,
-        speed: Math.random() * 1.6 + 0.3,
-        phase: Math.random() * Math.PI * 2,
-        depth: Math.random() * 0.8 + 0.2,
-      }));
+      // only a real width change (rotation, window resize) re-seeds the sky;
+      // a height-only change such as the mobile URL bar just rescales it
+      const { stars, builtW } = sky.current;
+      if (!stars.length || Math.abs(w - builtW) > 1) buildStars();
+      buildNebula();
+      return true;
     };
 
-    const nebula = (xr: number, yr: number, rad: number, hue: string) => {
-      const g = ctx.createRadialGradient(w * xr, h * yr, 0, w * xr, h * yr, rad);
-      g.addColorStop(0, hue);
-      g.addColorStop(1, "transparent");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-    };
+    const draw = (t: number, dt: number) => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (nebulaLayer) ctx.drawImage(nebulaLayer, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const draw = (t: number) => {
-      ctx.clearRect(0, 0, w, h);
+      const parallax = animate && !coarse;
       const { nx, ny } = mouseStore.current;
 
-      // soft forest glows behind the stars
-      nebula(0.2, 0.15, Math.max(w, h) * 0.5, "rgba(111, 174, 119, 0.10)");
-      nebula(0.85, 0.75, Math.max(w, h) * 0.55, "rgba(217, 171, 82, 0.07)");
-
-      ctx.fillStyle = "#f6f1e2";
-      for (const s of stars) {
+      for (const s of sky.current.stars) {
         const tw = animate
           ? s.base + Math.sin(t * 0.001 * s.speed + s.phase) * s.amp
           : s.base;
-        const px = s.x + (animate ? nx * 12 * s.depth : 0);
-        const py = s.y + (animate ? ny * 12 * s.depth : 0);
+        const sprite = sprites[s.size];
+        const px = s.x * w + (parallax ? nx * 12 * s.depth : 0);
+        const py = s.y * h + (parallax ? ny * 12 * s.depth : 0);
         ctx.globalAlpha = Math.max(0.05, Math.min(1, tw));
-        ctx.beginPath();
-        ctx.arc(px, py, s.r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.drawImage(sprite.canvas, px - sprite.css / 2, py - sprite.css / 2, sprite.css, sprite.css);
       }
+      ctx.globalAlpha = 1;
 
       // shooting stars
       if (animate && t > lastSpawn) {
@@ -118,10 +203,13 @@ export function Starfield() {
           max: 850 + Math.random() * 350,
         });
       }
+      // velocities are per 60fps frame; scale by real elapsed time so a
+      // throttled loop moves shooters at the same speed
+      const step = Math.min(dt, 100) / 16;
       shooters = shooters.filter((sh) => {
-        sh.life += 16; // ~1 frame at 60fps
-        sh.x += sh.vx;
-        sh.y += sh.vy;
+        sh.life += 16 * step;
+        sh.x += sh.vx * step;
+        sh.y += sh.vy * step;
         const p = sh.life / sh.max;
         if (p >= 1) return false;
         const tail = 90;
@@ -137,42 +225,71 @@ export function Starfield() {
         return true;
       });
 
-      ctx.globalAlpha = 1;
+      // first frame on screen: let the sky fade up (globals.css)
+      if (!canvas.hasAttribute("data-ready")) canvas.setAttribute("data-ready", "");
     };
 
     const loop = (t: number) => {
       raf = requestAnimationFrame(loop);
-      draw(t);
+      const dt = lastFrame ? t - lastFrame : 16;
+      if (dt < frameGap) return;
+      lastFrame = t;
+      draw(t, dt);
     };
 
-    resize();
-    if (animate) {
-      mouseStore.start();
-      raf = requestAnimationFrame(loop);
-    } else {
-      draw(0);
-    }
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      lastFrame = 0;
+    };
+
+    /** Draw or run only while the sky is actually visible. */
+    const sync = () => {
+      const visible = !document.hidden && !isLight() && resize();
+      if (!visible) {
+        stop();
+        return;
+      }
+      if (animate) {
+        if (!raf) raf = requestAnimationFrame(loop);
+      } else {
+        draw(0, 0);
+      }
+    };
+
+    if (animate && !coarse) mouseStore.start();
+    sync();
 
     const onResize = () => {
-      resize();
-      draw(performance.now());
+      if (!resize()) return;
+      if (!animate) draw(0, 0);
     };
-    window.addEventListener("resize", onResize);
+    const ro = new ResizeObserver(onResize);
+    ro.observe(canvas);
+
+    const themeObserver = new MutationObserver(sync);
+    themeObserver.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    document.addEventListener("visibilitychange", sync);
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
+      stop();
+      ro.disconnect();
+      themeObserver.disconnect();
+      document.removeEventListener("visibilitychange", sync);
     };
-  }, []);
+  }, [reduced]);
 
   return (
-    <div className="starfield-layer pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
+    <div
+      className="starfield-layer pointer-events-none fixed inset-x-0 top-0 -z-10 h-screen supports-[height:100lvh]:h-[100lvh]"
+      aria-hidden="true"
+    >
       <div
         className="absolute inset-0"
         style={{ background: "linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 45%, var(--sky-3) 100%)" }}
       />
       <div className="dot-grid absolute inset-0" />
-      <canvas ref={canvasRef} className="h-full w-full" />
+      <canvas ref={canvasRef} className="starfield-canvas h-full w-full" />
     </div>
   );
 }

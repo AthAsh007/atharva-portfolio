@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { Toast } from "@/components/ui/Toast";
 import { profile } from "@/lib/site";
 
 const KONAMI = [
@@ -53,13 +53,12 @@ export function EasterEgg() {
 
   if (!show) return null;
 
-  return createPortal(
-    <div className="toast-in liquid-glass fixed bottom-6 left-1/2 z-[140] -translate-x-1/2 rounded-full px-5 py-3 text-small text-ink">
+  return (
+    <Toast>
       You found the shortcut. &nbsp;
       <a href={`mailto:${profile.email}`} className="text-accent underline underline-offset-4">
         Let&apos;s build something.
       </a>
-    </div>,
-    document.body,
+    </Toast>
   );
 }

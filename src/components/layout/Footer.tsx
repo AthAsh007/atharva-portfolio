@@ -2,6 +2,7 @@
 
 import { profile } from "@/lib/site";
 import { LocalClock } from "@/components/ui/LocalClock";
+import { CurrentYear } from "@/components/ui/CurrentYear";
 import { useCopy, isLink } from "@/hooks/useCopy";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,7 @@ export function Footer() {
 
   return (
     <footer className="shell pb-s3 pt-s5">
-      <div className="liquid-glass rounded-[22px] px-s3 py-s5">
+      <div className="liquid-glass rounded-glass px-s2 py-s5 sm:px-s3">
         <p className="font-display text-[clamp(1.75rem,4vw,3rem)] leading-none text-accent">
           End of transmission.
         </p>
@@ -26,7 +27,7 @@ export function Footer() {
             </p>
           </div>
 
-          <ul className="flex flex-col gap-s1 md:items-end">
+          <ul className="flex flex-col md:items-end">
             {profile.socials.map((social) => {
               const copied = copiedId === social.href;
               return (
@@ -36,21 +37,21 @@ export function Footer() {
                       href={social.href}
                       target={social.href.startsWith("http") ? "_blank" : undefined}
                       rel={social.href.startsWith("http") ? "me noreferrer" : undefined}
-                      className="group inline-flex items-baseline gap-2 text-small text-muted transition-colors hover:text-accent"
+                      className="group inline-flex max-w-full flex-wrap items-baseline gap-x-2 py-1 text-small [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:items-center text-muted transition-colors hover:text-accent"
                     >
                       <span className="uppercase tracking-[0.16em]">{social.label}</span>
                       <span className="text-rule transition-colors group-hover:text-accent/60">/</span>
-                      <span className="text-ink">{social.handle}</span>
+                      <span className="min-w-0 text-ink [overflow-wrap:anywhere]">{social.handle}</span>
                     </a>
                   ) : (
                     <button
                       type="button"
                       onClick={() => copy(social.href, social.handle)}
-                      className="group inline-flex cursor-pointer items-baseline gap-2 text-small text-muted transition-colors hover:text-accent"
+                      className="group inline-flex max-w-full cursor-pointer flex-wrap items-baseline gap-x-2 py-1 text-small [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:items-center text-muted transition-colors hover:text-accent"
                     >
                       <span className="uppercase tracking-[0.16em]">{social.label}</span>
                       <span className="text-rule transition-colors group-hover:text-accent/60">/</span>
-                      <span className={cn("text-ink", copied && "copy-pop text-accent")}>
+                      <span className={cn("min-w-0 text-ink [overflow-wrap:anywhere]", copied && "copy-pop text-accent")}>
                         {copied ? "copied" : social.handle}
                       </span>
                     </button>
@@ -67,11 +68,11 @@ export function Footer() {
             All systems operational
           </p>
           <p>
-            &copy; {new Date().getFullYear()} {profile.name}
+            &copy; <CurrentYear /> {profile.name}
           </p>
           <p className="inline-flex items-center gap-s2">
             <LocalClock />
-            <a href="#top" className="transition-colors hover:text-accent">
+            <a href="#top" className="inline-flex min-h-11 items-center transition-colors hover:text-accent">
               Back to top &nbsp;&uarr;
             </a>
           </p>

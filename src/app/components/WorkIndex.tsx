@@ -16,7 +16,7 @@ export function WorkIndex() {
   const n8n = profile.socials.find((s) => s.label.toLowerCase() === "n8n");
 
   return (
-    <section id="index" className="shell scroll-mt-24 py-s5">
+    <section id="index" className="shell py-s5">
       <SectionHeader
         index="01"
         label="Selected work"
@@ -29,7 +29,7 @@ export function WorkIndex() {
         <Reveal className="mt-s4">
           <article
             id={featured.slug}
-            className="liquid-glass group grid scroll-mt-24 gap-s3 rounded-[24px] p-s3 md:grid-cols-2 md:gap-s4 md:p-s4"
+            className="liquid-glass group grid gap-s3 rounded-glass-lg p-s3 md:grid-cols-2 md:gap-s4 md:p-s4"
           >
             <Cover project={featured} ratio="aspect-[4/3]" />
 
@@ -37,7 +37,7 @@ export function WorkIndex() {
               <p className="label">
                 <span className="text-accent">{featured.index}</span> &nbsp;/&nbsp; {featured.kicker} &nbsp;/&nbsp; {featured.year}
               </p>
-              <h3 className="font-heading text-h1 tracking-tight">{featured.title}</h3>
+              <h3 className="font-heading text-[clamp(1.6rem,3.2vw,2.1rem)] leading-[1.15] tracking-tight">{featured.title}</h3>
               <p className="max-w-measure text-body">{featured.summary}</p>
               <p className="max-w-measure text-body text-muted">{featured.detail}</p>
 
@@ -72,7 +72,7 @@ export function WorkIndex() {
           <Reveal key={project.slug} delay={(i % 3) * 60} className="h-full">
             <article
               id={project.slug}
-              className="liquid-glass group flex h-full scroll-mt-24 flex-col gap-s2 rounded-[22px] p-s3 transition-transform duration-300 ease-spring hover:-translate-y-1"
+              className="liquid-glass group flex h-full flex-col gap-s2 rounded-glass p-s3 transition-transform duration-300 ease-spring hover:-translate-y-1"
             >
               <Cover project={project} ratio="aspect-[16/10]" />
 
@@ -105,7 +105,7 @@ export function WorkIndex() {
                     href={project.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-small uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-70"
+                    className="inline-flex min-h-11 items-center text-small uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-70"
                   >
                     {project.linkLabel ?? "Paper"} &nbsp;&rarr;
                   </a>
@@ -132,7 +132,7 @@ function Cover({
       <Tilt className="block h-full">
         <Plate
           variant={project.plate}
-          className="h-full w-full opacity-80 grayscale-[0.55] transition-all duration-500 ease-out group-hover:opacity-100 group-hover:grayscale-0"
+          className="h-full w-full opacity-80 grayscale-[0.55] transition-all duration-500 ease-out group-hover:opacity-100 group-hover:grayscale-0 [@media(hover:none)]:opacity-100 [@media(hover:none)]:grayscale-0"
         />
       </Tilt>
       <span

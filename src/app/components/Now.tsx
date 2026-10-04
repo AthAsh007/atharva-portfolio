@@ -7,7 +7,7 @@ import { currently } from "@/lib/site";
 export function Now() {
   return (
     <section aria-label="Currently building" className="shell py-s4">
-      <div className="liquid-glass rounded-[22px] p-s3">
+      <div className="liquid-glass rounded-glass p-s3">
         <div className="flex flex-wrap items-center justify-between gap-s2">
           <div className="flex items-center gap-3">
             <span className="relative flex h-2.5 w-2.5">

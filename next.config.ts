@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
   output: "export",
   // no next/image optimization (none used, but pin it for safety on export)
   images: { unoptimized: true },
+  // inlined into both bundles at build time, so the server render and the
+  // client agree on the year (see CurrentYear)
+  env: { BUILD_YEAR: String(new Date().getFullYear()) },
   reactStrictMode: true,
   // pin the tracing root so Next does not walk up to a parent lockfile
   outputFileTracingRoot: path.join(__dirname),

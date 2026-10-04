@@ -11,7 +11,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
  */
 export function Process() {
   return (
-    <section id="process" className="shell scroll-mt-24 py-s5">
+    <section id="process" className="shell py-s5">
       <SectionHeader
         index="03"
         label="Process"
@@ -19,14 +19,14 @@ export function Process() {
         description="Four stages. Automate sits in the middle because that is where most of the time gets saved."
       />
 
-      <div className="mt-s4 flex flex-col gap-s2 md:flex-row md:items-stretch md:gap-0">
+      <div className="mt-s4 flex flex-col gap-s2 md:grid md:grid-cols-2 lg:flex lg:flex-row lg:items-stretch lg:gap-0">
         {process.map((step, i) => (
           <Fragment key={step.index}>
             <Reveal
               delay={i * 80}
-              className="liquid-glass flex flex-1 flex-col gap-s2 rounded-[22px] p-s3"
+              className="liquid-glass flex flex-1 flex-col gap-s2 rounded-glass p-s3"
             >
-              <span className="font-heading text-[clamp(2.5rem,5vw,4rem)] leading-none text-accent">
+              <span className="font-heading text-numeral text-accent">
                 {step.index}
               </span>
               <h3 className="font-heading text-h3">{step.title}</h3>
@@ -45,7 +45,7 @@ export function Process() {
             {i < process.length - 1 ? (
               <div
                 aria-hidden
-                className="hidden shrink-0 items-center justify-center md:flex md:w-14"
+                className="hidden shrink-0 items-center justify-center lg:flex lg:w-14"
               >
                 <span className="relative block h-px w-full bg-gradient-to-r from-accent/20 via-accent/50 to-accent/20">
                   <span className="pipeline-pulse" style={{ animationDelay: `${i * 0.55}s` }} />

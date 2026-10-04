@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { useContactModal } from "@/components/ui/ContactModal";
 import { LocalClock } from "@/components/ui/LocalClock";
+import { CurrentYear } from "@/components/ui/CurrentYear";
 import { mouse, mouseStore } from "@/lib/mouseStore";
 
 /**
@@ -20,28 +21,56 @@ export function Hero() {
   const nameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!document.documentElement.getAttribute("data-motion")) return;
+    // Gate on the media queries directly: data-motion is set by AppShell's
+    // effect, which runs after this child effect on first load.
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    )
+      return;
     const el = nameRef.current;
-    if (!el) return;
+    const hero = el?.closest("section");
+    if (!el || !hero) return;
     mouseStore.start();
+
+    // Park and wake: one write per frame while the pointer moves, and nothing
+    // at all while it is still or while the hero is scrolled out of view.
     let raf = 0;
-    const loop = () => {
-      raf = requestAnimationFrame(loop);
+    let visible = true;
+    const frame = () => {
+      raf = 0;
       el.style.transform = `translate3d(${mouse.nx * 12}px, ${mouse.ny * 9}px, 0)`;
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    const wake = () => {
+      if (!raf && visible) raf = requestAnimationFrame(frame);
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      el.style.willChange = visible ? "transform" : "";
+      if (visible) wake();
+    });
+    io.observe(hero);
+    window.addEventListener("mousemove", wake, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      window.removeEventListener("mousemove", wake);
+      el.style.willChange = "";
+    };
   }, []);
 
   return (
-    <section className="relative flex min-h-screen items-stretch pt-20 pb-s3">
+    <section
+      id="hero"
+      className="relative flex min-h-screen min-h-svh items-stretch pb-s3 pt-[calc(5rem+env(safe-area-inset-top))]"
+    >
       <div className="shell w-full">
-        <div className="liquid-glass flex min-h-[calc(100vh-7rem)] flex-col justify-between rounded-[28px] p-s2 sm:p-s3 lg:p-s4">
+        <div className="liquid-glass flex flex-col justify-between rounded-glass-lg p-s2 sm:p-s3 lg:p-s4 [@media(min-height:501px)]:min-h-[calc(100svh-7rem-env(safe-area-inset-top))]">
           {/* meta rule */}
           <div className="flex flex-wrap items-center justify-between gap-s2 border-b border-rule/40 pb-s2">
             <Reveal>
               <p className="label">
-                <span className="text-accent">00</span> &nbsp;/&nbsp; {profile.name} &nbsp;/&nbsp; {new Date().getFullYear()}
+                <span className="text-accent">00</span> &nbsp;/&nbsp; {profile.name} &nbsp;/&nbsp; <CurrentYear />
               </p>
             </Reveal>
             <Reveal delay={80}>
@@ -62,10 +91,10 @@ export function Hero() {
           </div>
 
           {/* masthead */}
-          <div ref={nameRef} className="py-s2 will-change-transform">
+          <div ref={nameRef} className="py-s2">
             <h1 className="font-display leading-[0.85]">
-              <span className="block text-[clamp(2.5rem,9vw,6.5rem)] text-ink">Atharva</span>
-              <span className="text-outline block text-[clamp(2.5rem,9vw,6.5rem)]">Ashtekar</span>
+              <span className="block text-[clamp(2.5rem,9vw,8.5rem)] text-ink">Atharva</span>
+              <span className="text-outline block text-[clamp(2.5rem,9vw,8.5rem)]">Ashtekar</span>
             </h1>
           </div>
 
@@ -87,15 +116,7 @@ export function Hero() {
 
               <Reveal delay={200}>
                 <div className="mt-s2 flex flex-wrap gap-s2">
-                  <Button
-                    href="#"
-                    variant="primary"
-                    data-cta
-                    onClick={(e) => {
-                      e.preventDefault();
-                      openModal();
-                    }}
-                  >
+                  <Button variant="primary" data-cta aria-haspopup="dialog" onClick={openModal}>
                     Start a project
                   </Button>
                   <Button href="/Atharva-Ashtekar-CV.pdf" download variant="secondary">

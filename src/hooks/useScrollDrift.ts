@@ -16,6 +16,8 @@ export function useScrollDrift() {
 
     let frame = 0;
     let nodes: HTMLElement[] = Array.from(document.querySelectorAll("[data-drift]"));
+    // nothing to drive: skip the scroll and resize listeners entirely
+    if (nodes.length === 0) return;
 
     const update = () => {
       frame = 0;

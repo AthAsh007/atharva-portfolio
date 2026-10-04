@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { registerTilt } from "@/lib/mouseStore";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
 interface TiltProps {
@@ -14,16 +15,19 @@ interface TiltProps {
 
 /**
  * Wraps any element in a 3D hover tilt driven by the shared mouse loop (see
- * mouseStore.ts — no per-component listeners). Disabled entirely under
- * prefers-reduced-motion: the wrapper then renders flat with no JS.
+ * mouseStore.ts, no per-component listeners). Only registers on a real hover
+ * pointer: touch devices and prefers-reduced-motion get the flat wrapper with
+ * no JS work at all.
  */
 export function Tilt({ children, className, max = 8 }: TiltProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduced) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     const stop = registerTilt(el, max);
     return () => {
       stop();
@@ -31,7 +35,7 @@ export function Tilt({ children, className, max = 8 }: TiltProps) {
       el.style.willChange = "";
       el.classList.remove("glow");
     };
-  }, [max]);
+  }, [max, reduced]);
 
   return (
     <div ref={ref} data-tilt className={cn("inline-block", className)}>

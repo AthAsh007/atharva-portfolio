@@ -3,7 +3,7 @@
 import { useContactModal } from "@/components/ui/ContactModal";
 
 /**
- * A persistent, always-on contact trigger. A circular coral button with a soft
+ * A persistent, always-on contact trigger. A circular gold button with a soft
  * breathing halo that opens the brief modal. Tucked to the corner so it never
  * competes with the rail; the halo is gated on motion so reduced-motion users
  * get a clean, static button.
@@ -12,18 +12,18 @@ export function FloatingCTA() {
   const { openModal } = useContactModal();
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
+    <div className="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-[max(1.5rem,env(safe-area-inset-right))] z-40 hidden sm:block">
       <div
         aria-hidden
         className="absolute -inset-1.5 rounded-full bg-accent/15"
-        data-motion
       />
-      <div className="cta-pulse absolute -inset-2.5 rounded-full" />
+      <div aria-hidden className="cta-pulse absolute -inset-2.5 rounded-full" />
       <button
         type="button"
         onClick={openModal}
+        aria-haspopup="dialog"
         data-cta
-        className="relative grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-2 text-[var(--on-accent)] shadow-[0_0_24px_4px_rgba(217,171,82,0.4)] transition-transform hover:scale-110 hover:shadow-[0_0_28px_8px_rgba(217,171,82,0.55)]"
+        className="relative grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-2 text-[var(--on-accent)] shadow-[0_0_24px_4px_rgba(217,171,82,0.4)] transition-[transform,box-shadow] duration-300 ease-spring hover:scale-110 hover:shadow-[0_0_28px_8px_rgba(217,171,82,0.55)]"
       >
         <svg
           width="22"

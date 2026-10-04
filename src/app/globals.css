@@ -34,6 +34,9 @@
   --sky-1: #04120c;
   --sky-2: #082417;
   --sky-3: #0b2a19;
+
+  /* native scrollbars and form controls follow the theme */
+  color-scheme: dark;
 }
 
 /* Ivory & gold — opt in. */
@@ -44,7 +47,8 @@
   --ink: #12160f;
   --muted: #6b705d;
   --rule: #ddd5c0;
-  --accent: #a9781f;
+  /* a deeper gold so small accent text clears 4.5:1 on the ivory paper */
+  --accent: #8a6114;
   --accent-2: #4f7a52;
   --on-accent: #fffdf7;
 
@@ -60,14 +64,13 @@
   --sky-1: #f5f1e6;
   --sky-2: #f5f1e6;
   --sky-3: #f5f1e6;
+
+  color-scheme: light;
 }
 
 :root {
-  --font-heading: "Fraunces", Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  /* the cursive accent — the name, and a few voice moments */
-  --font-display: "Dancing Script", system-ui, cursive;
+  /* --font-heading, --font-body, --font-mono and --font-display come from
+     next/font in layout.tsx: self-hosted, with metric-matched fallbacks. */
 
   /* easing vocabulary — one spring that ties the interactions together */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -77,15 +80,33 @@
 @layer base {
   * {
     @apply border-rule;
-    /* theme switches fade colour smoothly. transition-colors covers bg,
-       border and text only — never transform/opacity, so scroll motion
-       stays snappy and unrevealed elements aren't caught mid-flight. */
-    @apply transition-colors duration-300;
+  }
+
+  /* theme switches fade colour smoothly, but only while a switch is in flight
+     (useTheme adds .theme-switching for ~350ms). :where() keeps it at zero
+     specificity, so a component's own transition (hover lifts, the arrow
+     nudge, the magnetic spring) always wins, and the rest of the time no node
+     carries a transition it did not ask for. */
+  :where(html.theme-switching) :where(*),
+  :where(html.theme-switching) :where(*)::before,
+  :where(html.theme-switching) :where(*)::after {
+    transition:
+      color 0.3s,
+      background-color 0.3s,
+      border-color 0.3s,
+      fill 0.3s,
+      stroke 0.3s;
   }
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    /* anchor jumps clear the fixed rail, including the notch inset when the
+       site runs standalone on a notched phone */
+    scroll-padding-top: calc(5rem + env(safe-area-inset-top));
+    /* the modal and palette scroll locks hide the scrollbar; reserving its
+       gutter stops the page and the fixed chrome jumping sideways on Windows */
+    scrollbar-gutter: stable;
+    scrollbar-color: var(--rule) var(--paper);
     font-size: 100%;
   }
 
@@ -140,7 +161,6 @@
      soft drop shadow for lift, and a slow sheen that travels across. All the
      colour comes from --accent so it re-tints with the theme. */
   .liquid-glass,
-  .glass,
   .glass-panel {
     position: relative;
     isolation: isolate;
@@ -157,7 +177,6 @@
       0 14px 44px -16px rgba(0, 0, 0, 0.55);
   }
   .liquid-glass::before,
-  .glass::before,
   .glass-panel::before {
     content: "";
     position: absolute;
@@ -168,28 +187,40 @@
   }
   /* travelling specular sheen */
   .liquid-glass::after,
-  .glass::after,
   .glass-panel::after {
     content: "";
     position: absolute;
     top: -20%;
-    left: -60%;
+    left: 0;
     width: 38%;
     height: 140%;
-    transform: skewX(-18deg);
+    /* parked off the left edge; travels on transform only (compositor, no
+       layout) so the blurred pane under it is not repainted every frame */
+    transform: translateX(-160%) skewX(-18deg);
     background: linear-gradient(100deg, transparent, color-mix(in srgb, var(--ink) 10%, transparent), transparent);
     pointer-events: none;
   }
-  [data-motion="on"] .liquid-glass::after,
-  [data-motion="on"] .glass::after,
+  /* the sheen only travels across panes that are on screen (useReveal toggles
+     data-inview), so off-screen blurred layers are not composited for nothing.
+     The small glass buttons are cheap and always on. */
+  [data-motion="on"] .liquid-glass[data-inview]::after,
   [data-motion="on"] .glass-panel::after {
     animation: liquid-sheen 7s ease-in-out infinite;
   }
 
   @keyframes liquid-sheen {
     0%,
-    100% { left: -60%; opacity: 0; }
-    50% { left: 120%; opacity: 1; }
+    100% { transform: translateX(-160%) skewX(-18deg); opacity: 0; }
+    50% { transform: translateX(320%) skewX(-18deg); opacity: 1; }
+  }
+
+  /* touch devices: half the blur radius, same look, far less GPU work */
+  @media (pointer: coarse) {
+    .liquid-glass,
+    .glass-panel {
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
   }
 
   ::selection {
@@ -208,12 +239,24 @@
     @apply font-mono text-small uppercase tracking-[0.14em] text-muted;
   }
 
+  /* side padding never drops inside the notch or rounded corners when the
+     viewport runs edge to edge (viewportFit: cover) */
   .shell {
-    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
+    @apply mx-auto w-full max-w-shell;
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
   }
-
-  .rule-t {
-    border-top: 1px solid var(--rule);
+  @media (min-width: 640px) {
+    .shell {
+      padding-left: max(2rem, env(safe-area-inset-left));
+      padding-right: max(2rem, env(safe-area-inset-right));
+    }
+  }
+  @media (min-width: 1024px) {
+    .shell {
+      padding-left: max(3rem, env(safe-area-inset-left));
+      padding-right: max(3rem, env(safe-area-inset-right));
+    }
   }
 
   /* hide the native scrollbar on the skills carousel */
@@ -240,16 +283,29 @@
   .link-underline {
     @apply relative inline-flex items-center text-accent;
   }
+  /* an invisible 44px-tall hit area around the text, without moving the
+     underline or the layout */
+  .link-underline::before {
+    content: "";
+    position: absolute;
+    inset: calc((100% - 2.75rem) / 2) -0.25rem;
+    min-height: 2.75rem;
+  }
   .link-underline::after {
     content: "";
     @apply absolute inset-x-0 bottom-[-2px] h-px;
-    background: linear-gradient(90, var(--accent-2), var(--accent));
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
     transform: scaleX(0);
     transform-origin: var(--underline-origin, 0 100%);
     transition: transform 0.5s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   }
-  .link-underline:hover::after {
+  .link-underline:focus-visible::after {
     transform: scaleX(1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .link-underline:hover::after {
+      transform: scaleX(1);
+    }
   }
 
   /* soft luminous glare on a hovered tilt element (plates, glass tiles) */
@@ -279,6 +335,58 @@
   transform: none;
 }
 
+/* The hero (#hero) is above the fold and holds the LCP text,
+   so it never waits on the observer: a one-shot CSS entrance that runs from
+   first paint, since data-motion is set by the pre-paint script in layout. */
+[data-motion="on"] #hero [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  animation: page-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* The masthead rises out of a clip, one line after the other. No opacity
+   change, so the LCP text is never held back; `backwards` drops the clip once
+   it lands, so the cursive swashes are not cropped. It plays alongside the
+   starfield fade below and the hero's page-in stagger, as one intro. */
+@keyframes masthead-in {
+  from {
+    clip-path: inset(100% -10% 0 -10%);
+    transform: translateY(0.2em);
+  }
+  to {
+    clip-path: inset(-20% -10% -40% -10%);
+    transform: none;
+  }
+}
+[data-motion="on"] #hero h1 > span {
+  animation: masthead-in 1s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+[data-motion="on"] #hero h1 > span + span {
+  animation-delay: 90ms;
+}
+
+/* The night falls in: the star canvas fades up after its first draw
+   (Starfield sets data-ready) instead of popping in after hydration. */
+[data-motion="on"] .starfield-canvas {
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+}
+[data-motion="on"] .starfield-canvas[data-ready] {
+  opacity: 1;
+}
+
+/* Safety net: if the app never hydrates (script blocked, slow network), the
+   pre-paint script adds .reveal-all after a few seconds so nothing stays
+   hidden. */
+html.reveal-all [data-reveal],
+html.reveal-all [data-wipe] > * {
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
 /* Signature moment: the plate numeral is wiped in behind a moving edge. */
 [data-motion="on"] [data-wipe] > * {
   clip-path: inset(0 100% 0 0);
@@ -287,12 +395,6 @@
 
 [data-motion="on"] [data-wipe][data-revealed="true"] > * {
   clip-path: inset(0 0 0 0);
-}
-
-/* Index numerals counter-drift against the scroll — the page's one flourish. */
-[data-motion="on"] [data-drift] {
-  transform: translate3d(0, calc(var(--drift, 0) * var(--drift-range, 3rem)), 0);
-  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -306,8 +408,7 @@
   }
 
   [data-reveal],
-  [data-wipe] > *,
-  [data-drift] {
+  [data-wipe] > * {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
@@ -319,63 +420,61 @@
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(-50%, 0, 0); }
 }
-@keyframes marquee-track-reverse {
-  from { transform: translate3d(-50%, 0, 0); }
-  to   { transform: translate3d(0, 0, 0); }
-}
 
-/* a soft halo that breathes around the floating CTA */
+/* a soft halo that breathes around the floating CTA. The ring is a static
+   box-shadow; only transform and opacity animate, so it stays on the
+   compositor instead of repainting a shadow every frame. */
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(217, 171, 82, 0.5); opacity: 0.6; }
-  50%  { box-shadow: 0 0 0 14px rgba(217, 171, 82, 0); opacity: 0.2; }
-  100% { box-shadow: 0 0 0 0 rgba(217, 171, 82, 0); opacity: 0; }
+  0%   { transform: scale(0.82); opacity: 0.6; }
+  70%  { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
 }
 .cta-pulse {
-  animation: pulse-ring 2.6s ease-in-out infinite;
+  box-shadow: 0 0 0 2px rgba(217, 171, 82, 0.45);
+  animation: pulse-ring 2.6s ease-out infinite;
 }
 
 .marquee-track {
   animation: marquee-track 42s linear infinite;
 }
-.marquee-track-reverse {
-  animation: marquee-track-reverse 42s linear infinite;
-}
-
-/* the band tilts with scroll velocity (--sv, set by useScrollVelocity) */
-[data-motion="on"] .marquee-band {
-  transform: skewY(calc(var(--sv, 0) * 1.6deg));
-  transition: transform 0.12s linear;
+/* the ticker holds still under the pointer, or when the toolkit pause
+   control is on (WCAG 2.2.2) */
+.marquee-track:hover,
+.marquee-track[data-paused] {
+  animation-play-state: paused;
 }
 
 html:not([data-motion="on"]) .marquee-track,
-html:not([data-motion="on"]) .marquee-track-reverse,
 html:not([data-motion="on"]) .cta-pulse {
   animation: none;
 }
 @media (prefers-reduced-motion: reduce) {
+  /* the ticker stops and stays readable; only the CTA halo is hidden */
   .marquee-track,
-  .marquee-track-reverse,
   .cta-pulse {
     animation: none;
-    opacity: 0.06;
+  }
+  .cta-pulse {
+    opacity: 0;
   }
 }
 
-/* ── Modal & panel entrance ──────────────────────────────────────────── */
+/* ── Modal entrance ──────────────────────────────────────────────────── */
+/* The backdrop only fades; the panel scales. Scaling the full-screen
+   overlay would pull the blur in from the edges and flash the page. */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+[data-motion="on"] .overlay-enter {
+  animation: overlay-in 0.3s ease-out;
+}
 @keyframes modal-in {
   from { opacity: 0; transform: scale(0.97); }
   to   { opacity: 1; transform: scale(1); }
 }
 [data-motion="on"] .modal-enter {
   animation: modal-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes panel-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: none; }
-}
-[data-motion="on"] .panel-in {
-  animation: panel-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── Digital-lab background: dot grid over the starfield ─────────────── */
@@ -392,6 +491,9 @@ html:not([data-motion="on"]) .cta-pulse {
 }
 
 /* ── Cursor glow: a soft light that trails the pointer ───────────────── */
+/* Hidden until the pointer has been seen (CursorGlow sets data-on), so it
+   never paints in the top-left corner on load, and fades out when the
+   pointer leaves the window. */
 .cursor-glow {
   position: fixed;
   inset: 0;
@@ -403,34 +505,55 @@ html:not([data-motion="on"]) .cta-pulse {
     transparent 70%
   );
   mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+.cursor-glow[data-on] {
+  opacity: 1;
 }
 
-/* ── Page entrance ───────────────────────────────────────────────────── */
+@media (hover: none), (pointer: coarse) {
+  .cursor-glow {
+    display: none;
+  }
+}
+
+/* ── Page entrance (the hero's supporting lines) ─────────────────────── */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: none; }
 }
-[data-motion="on"] .page-in {
-  animation: page-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
 
 /* ── Animated pipeline pulse (Process connectors) ────────────────────── */
+/* The element spans the whole track and carries the dot on its left edge, so
+   translateX(100%) moves the dot the full track length on transform alone. */
 @keyframes pipeline-pulse {
-  0%   { left: 0%; opacity: 0; }
+  0%   { transform: translateX(0); opacity: 0; }
   20%  { opacity: 1; }
   80%  { opacity: 1; }
-  100% { left: 100%; opacity: 0; }
+  100% { transform: translateX(100%); opacity: 0; }
 }
 .pipeline-pulse {
   position: absolute;
   top: 50%;
   left: 0;
   height: 7px;
-  width: 7px;
+  width: 100%;
   margin-top: -3.5px;
+  pointer-events: none;
+}
+.pipeline-pulse::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 7px;
+  width: 7px;
   border-radius: 9999px;
   background: var(--accent);
   box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+[data-motion="on"] .pipeline-pulse {
   animation: pipeline-pulse 2.4s ease-in-out infinite;
 }
 
@@ -445,7 +568,9 @@ html:not([data-motion="on"]) .cta-pulse {
   animation: copy-pop 0.35s ease-out;
 }
 
-/* ── Toast (easter egg) ──────────────────────────────────────────────── */
+/* ── Toast (easter egg, palette copy) ────────────────────────────────── */
+/* The toast is centred by a flex wrapper, so the animated element carries
+   no translate of its own for the keyframes to override. */
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(16px) scale(0.98); }
   to   { opacity: 1; transform: none; }

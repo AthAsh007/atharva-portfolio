@@ -11,11 +11,11 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
  */
 export function Approach() {
   return (
-    <section id="approach" className="shell scroll-mt-24 py-s5">
+    <section id="approach" className="shell py-s5">
       <SectionHeader index="04" label="About" title="One person, both ends of the stack." />
 
       <Reveal className="mt-s4">
-        <p className="max-w-[54ch] font-heading text-h2 leading-[1.3] text-ink">
+        <p className="max-w-[54ch] font-heading text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.35] text-ink">
           {profile.bio[0]}
         </p>
       </Reveal>
@@ -25,9 +25,9 @@ export function Approach() {
           <Reveal
             key={principle.index}
             delay={i * 70}
-            className="liquid-glass flex flex-col gap-s2 rounded-[22px] p-s3"
+            className="liquid-glass flex flex-col gap-s2 rounded-glass p-s3"
           >
-            <span className="font-heading text-[clamp(2.5rem,5vw,4rem)] leading-none text-accent">
+            <span className="font-heading text-numeral text-accent">
               {principle.index}
             </span>
             <h3 className="font-heading text-h3">{principle.title}</h3>
@@ -36,15 +36,15 @@ export function Approach() {
         ))}
       </div>
 
-      <dl className="liquid-glass mt-s2 grid grid-cols-2 gap-y-s3 rounded-[22px] p-s4 sm:grid-cols-4">
+      <dl className="liquid-glass mt-s2 grid grid-cols-2 gap-x-s2 gap-y-s3 rounded-glass p-s3 sm:grid-cols-4 sm:p-s4">
         {metrics.map((metric, i) => (
-          <Reveal key={metric.label} delay={i * 70} className="px-s2">
+          <Reveal key={metric.label} delay={i * 70} className="min-w-0 px-0 sm:px-s2">
             <dt className="sr-only">{metric.label}</dt>
             <dd>
               <span className="block font-heading text-[clamp(1.5rem,3vw,2.5rem)] leading-[1.1] text-accent">
                 {metric.value}
               </span>
-              <span className="mt-s1 block text-small uppercase tracking-[0.12em] text-muted">
+              <span className="mt-s1 block break-words text-small uppercase tracking-[0.12em] text-muted">
                 {metric.label}
               </span>
             </dd>

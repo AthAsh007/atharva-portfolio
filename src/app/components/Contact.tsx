@@ -19,9 +19,9 @@ export function Contact() {
   const { copiedId, copy } = useCopy();
 
   return (
-    <section id="contact" className="shell scroll-mt-24 py-s5">
-      <div className="grid gap-s4 md:grid-cols-12 md:items-end">
-        <div className="md:col-span-6">
+    <section id="contact" className="shell py-s5">
+      <div className="grid gap-s4 lg:grid-cols-12 lg:items-end">
+        <div className="lg:col-span-6">
           <Reveal>
             <p className="label border-b border-rule/40 pb-s2">
               <span className="text-accent">05</span> &nbsp;/&nbsp; Contact
@@ -39,9 +39,10 @@ export function Contact() {
           <Reveal delay={140}>
             <a
               href={`mailto:${profile.email}`}
-              className="mt-s4 block break-all font-heading text-h2 tracking-tight underline decoration-accent/40 underline-offset-8 transition-colors hover:text-accent hover:decoration-accent"
+              className="mt-s4 block font-heading text-[clamp(1.25rem,6.2vw,2.25rem)] tracking-tight [overflow-wrap:anywhere] underline decoration-accent/40 underline-offset-8 transition-colors hover:text-accent hover:decoration-accent"
             >
-              {profile.email}
+              {profile.email.split("@")[0]}
+              <wbr />@{profile.email.split("@")[1]}
             </a>
           </Reveal>
 
@@ -58,41 +59,48 @@ export function Contact() {
           </Reveal>
         </div>
 
-        <Reveal className="md:col-span-6" delay={120}>
-          <div className="liquid-glass rounded-[22px] p-s4">
+        <Reveal className="lg:col-span-6" delay={120}>
+          <div className="liquid-glass rounded-glass p-s2 sm:p-s3 lg:p-s4">
             <p className="text-body text-muted">
               Two ways in. Book a 30-minute slot, or send a short brief and I reply by email.
             </p>
 
             <div className="mt-s3 flex flex-wrap gap-s2">
-              <Button href={profile.booking} target="_blank" rel="noreferrer" variant="secondary">
+              <Button
+                href={profile.booking}
+                target="_blank"
+                rel="noreferrer"
+                variant="secondary"
+                className="w-full gap-2 px-4 sm:w-auto sm:gap-3 sm:px-6"
+              >
                 Book a 30-min slot
               </Button>
               <Button
-                href="#"
                 variant="primary"
                 data-cta
-                onClick={(e) => {
-                  e.preventDefault();
-                  openModal();
-                }}
+                aria-haspopup="dialog"
+                onClick={openModal}
+                className="w-full gap-2 px-4 sm:w-auto sm:gap-3 sm:px-6"
               >
                 Send a brief
               </Button>
             </div>
 
-            <ul className="mt-s4 grid grid-cols-1 gap-s1 sm:grid-cols-2">
+            {/* the pitch and this panel only split side by side from lg, so the
+                panel is never squeezed to ~320px on a tablet; in the split,
+                the links drop to one column until xl gives them room */}
+            <ul className="mt-s4 grid grid-cols-1 gap-s1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               {profile.socials.map((social) => {
                 const copied = copiedId === social.href;
                 const rowClass =
-                  "group flex w-full items-baseline justify-between gap-s2 rounded-xl border border-rule/40 px-3 py-2 transition-colors hover:border-accent/50";
+                  "group flex min-h-11 w-full min-w-0 items-center justify-between gap-s2 rounded-xl border border-rule/40 px-3 py-3 transition-colors hover:border-accent/50";
                 const label = (
-                  <span className="text-small uppercase tracking-[0.12em] text-muted group-hover:text-accent">
+                  <span className="shrink-0 text-small uppercase tracking-[0.12em] text-muted group-hover:text-accent">
                     {social.label}
                   </span>
                 );
                 const handle = (
-                  <span className={cn("truncate text-small text-ink", copied && "copy-pop text-accent")}>
+                  <span className={cn("min-w-0 truncate text-small text-ink", copied && "copy-pop text-accent")}>
                     {copied ? "copied" : social.handle}
                   </span>
                 );
