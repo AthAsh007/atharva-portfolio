@@ -5,7 +5,7 @@ import { profile } from "@/lib/site";
 const n8n = profile.socials.find((s) => s.label.toLowerCase() === "n8n");
 
 /**
- * The index. Eight plates, oversized numbers, the spine of the page.
+ * The index. Nine plates, oversized numbers, the spine of the page.
  * Ordered by weight, not by date.
  */
 export const projects: Project[] = [
@@ -122,5 +122,21 @@ export const projects: Project[] = [
       "Seven independent projects (bank, property, IOU, marketplace, auction, escrow) each compiling and running on its own, so a pattern can be picked up without wading through the rest. Covers signatory/observer separation, contract keys, atomic delivery-versus-payment, time-gated choices and multi-party propose-accept workflows. Targets Daml SDK 3.4 on the Canton 3 line.",
     stack: ["Daml", "Canton 3", "Daml-LF 2.x"],
     plate: "wave",
+  },
+  {
+    slug: "gate-prep",
+    index: "09",
+    title: "GATE CS Prep",
+    kicker: "Exam prep site",
+    year: "2026",
+    role: "Founder / Engineer",
+    summary:
+      "Notes for all 59 GATE 2027 CS syllabus topics and timed mock tests that copy the real exam screen.",
+    detail:
+      "A static Astro site with one page per syllabus topic, ten full-length mocks and ten subject tests built from verified question banks. The test screen has the GATE palette, mark for review, MCQ/MSQ/NAT, an on-screen calculator and negative marking, and it resumes after a reload. Progress lives in the browser, so there are no accounts.",
+    stack: ["Astro", "TypeScript", "KaTeX", "Cloudflare Workers"],
+    href: "https://gate.athash.in/",
+    linkLabel: "Live site",
+    plate: "grid",
   },
 ];
