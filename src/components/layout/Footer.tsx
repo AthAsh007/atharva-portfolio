@@ -1,6 +1,6 @@
 "use client";
 
-import { profile } from "@/lib/site";
+import { profile, sideProjects } from "@/lib/site";
 import { LocalClock } from "@/components/ui/LocalClock";
 import { CurrentYear } from "@/components/ui/CurrentYear";
 import { useCopy, isLink } from "@/hooks/useCopy";
@@ -61,6 +61,29 @@ export function Footer() {
             })}
           </ul>
         </div>
+
+        {sideProjects.length > 0 ? (
+          <div className="mt-s4 border-t border-rule/40 pt-s3">
+            <p className="label">Side projects</p>
+            <ul className="mt-s2 grid gap-s2 sm:grid-cols-2 lg:grid-cols-3">
+              {sideProjects.map((p) => (
+                <li key={p.href}>
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex flex-col gap-1 py-1 [@media(pointer:coarse)]:min-h-11"
+                  >
+                    <span className="text-small uppercase tracking-[0.16em] text-ink transition-colors group-hover:text-accent">
+                      {p.title} &nbsp;&rarr;
+                    </span>
+                    <span className="text-small text-muted">{p.note}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <div className="mt-s4 flex flex-col gap-s2 border-t border-rule/40 pt-s3 text-small uppercase tracking-[0.14em] text-muted md:flex-row md:items-center md:justify-between">
           <p className="inline-flex items-center gap-2">

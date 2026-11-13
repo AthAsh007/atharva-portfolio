@@ -88,3 +88,10 @@ export interface Metric {
   value: string;
   label: string;
 }
+
+/** A small side project linked from the footer. */
+export interface SideProject {
+  title: string;
+  note: string;
+  href: string;
+}

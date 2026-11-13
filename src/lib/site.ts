@@ -1,4 +1,4 @@
-import type { NavItem, Profile, ToolkitGroup, CurrentItem } from "@/types/portfolio";
+import type { NavItem, Profile, ToolkitGroup, CurrentItem, SideProject } from "@/types/portfolio";
 
 export const nav: NavItem[] = [
   { label: "Work", href: "#index" },
@@ -58,5 +58,14 @@ export const currently: CurrentItem[] = [
   {
     title: "AI Automations",
     note: "Agent and workflow pipelines in n8n and TypeScript that remove the manual steps between systems.",
+  },
+];
+
+/** Smaller things built on the side, listed in the footer. */
+export const sideProjects: SideProject[] = [
+  {
+    title: "GATE CS Prep",
+    note: "Notes for every GATE 2027 CS topic and timed mock tests.",
+    href: "https://gate.athash.in/",
   },
 ];
