@@ -92,6 +92,10 @@ export function Footer() {
           </p>
           <p>
             &copy; <CurrentYear /> {profile.name}
+            &nbsp;&middot;&nbsp;
+            <a href="/privacy" className="transition-colors hover:text-accent">
+              Privacy
+            </a>
           </p>
           <p className="inline-flex items-center gap-s2">
             <LocalClock />
